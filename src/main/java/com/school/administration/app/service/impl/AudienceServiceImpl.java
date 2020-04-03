@@ -43,7 +43,7 @@ public class AudienceServiceImpl implements AudienceService {
 	@Override
 	public AudienceDto createAudience(AudienceDto audience) {
 		// TODO Auto-generated method stub
-		if(audienceRepositories.findByAudienceName(audience.getAudienceName()) != null) throw	 new RuntimeException("audience "+audience.getAudienceName()+" is already exists!");
+		if(audienceRepositories.findByAudienceName(audience.getAudienceName()) != null) throw new RuntimeException("audience "+audience.getAudienceName()+" is already exists!");
 		
 		AudienceDto returnValue = new AudienceDto();
 		AudienceAddressDto address = audience.getAddress();

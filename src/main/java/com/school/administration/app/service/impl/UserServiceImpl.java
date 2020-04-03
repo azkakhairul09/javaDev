@@ -25,6 +25,7 @@ import com.school.administration.app.ui.io.entity.ProductsEntity;
 import com.school.administration.app.ui.io.entity.RoleEntity;
 import com.school.administration.app.ui.io.entity.UserEntity;
 import com.school.administration.app.ScheduledTasks;
+import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.ProductsRepository;
 import com.school.administration.app.io.repositories.RoleRepository;
 import com.school.administration.app.io.repositories.UserRepository;
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		UserEntity userEntity = userRepository.findByUsername(username);
 		
-		if (userEntity == null) throw new UsernameNotFoundException(username);
+		if (userEntity == null) throw new UsernameNotFoundException(username+ " not found");
 		
 		return new User(userEntity.getUsername(), userEntity.getEncryptPassword(), 
 				userEntity.getIsActive(),
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		UserEntity userEntity = userRepository.findByUsername(username);
 		
-		if (userEntity == null) throw new UsernameNotFoundException(username);
+		if (userEntity == null) throw new UserServiceException(username+ " not found");
 		
 		UserDto returnValue = new UserDto();
 		BeanUtils.copyProperties(userEntity, returnValue);
@@ -87,8 +88,8 @@ public class UserServiceImpl implements UserService {
 	public UserDto createUser(String roleId, UserDto user) {
 		// TODO Auto-generated method stub
 		//validation
-		if (userRepository.findByUsername(user.getUsername()) != null) throw new RuntimeException("Email already exists!");
-		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new RuntimeException("Role ID = " +roleId+ " is does not exists!");
+		if (userRepository.findByUsername(user.getUsername()) != null) throw new RuntimeException("email already exists!");
+		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new RuntimeException("role ID = " +roleId+ " not found");
 		
 		final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
@@ -115,10 +116,6 @@ public class UserServiceImpl implements UserService {
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
-//		BeanUtils.copyProperties(storedUserDetails, returnValue);
-		
-//		Send email message to user to verify their email address
-		/* new AmazonSES().verifyEmail(returnValue); */
 		
 		return returnValue;
 	}
@@ -206,8 +203,8 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userEntity = userRepository.findUserByUserId(userId);
 		
-		if (userEntity == null) throw new UsernameNotFoundException(
-				"User with ID: " +userId+ " not found");
+		if (userEntity == null) throw new UserServiceException(
+				"user not found");
 		
 		returnValue = modelMapper.map(userEntity, UserDto.class);
 		
