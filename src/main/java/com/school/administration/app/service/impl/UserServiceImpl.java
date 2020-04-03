@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import com.school.administration.app.ui.io.entity.ProductsEntity;
 import com.school.administration.app.ui.io.entity.RoleEntity;
 import com.school.administration.app.ui.io.entity.UserEntity;
-import com.school.administration.app.ui.model.response.UserRest;
 import com.school.administration.app.ScheduledTasks;
 import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.ProductsRepository;
@@ -89,8 +88,19 @@ public class UserServiceImpl implements UserService {
 	public UserDto createUser(String roleId, UserDto user) {
 		// TODO Auto-generated method stub
 		//validation
-		if (userRepository.findByUsername(user.getUsername()) != null) throw new RuntimeException("email already exists!");
-		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new RuntimeException("role ID = " +roleId+ " not found");
+		if (userRepository.findByUsername(user.getUsername()) != null 
+			&& userRepository.findByEmail(user.getEmail()) != null 
+			&&userRepository.findByFullName(user.getFullName()) != null)
+		throw new RuntimeException("user is duplicate entry");
+		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new RuntimeException("role id not found");
+		
+		if (user != null && roleRepository.findRoleIdByRoleId(roleId) != null) {
+			
+			UserDto userDto = new UserDto();
+			userDto.setErrorCode("0");
+			userDto.setStatus("success");
+			
+		}
 		
 		final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
@@ -146,6 +156,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ProductsDto createProduct(ProductsDto product) {
 		// TODO Auto-generated method stub
+		if (productRepository.findByProductName(product.getProductName()) != null) throw new UserServiceException("product is duplicate entry");
+		
 		SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 		
@@ -206,12 +218,6 @@ public class UserServiceImpl implements UserService {
 		
 		if (userEntity == null) throw new UserServiceException(
 				"user not found");
-		
-		if (userEntity != null) {
-			UserRest userRest = new UserRest();
-			userRest.setErrorCode("0");
-			userRest.setStatus("success");
-		}
 		
 		returnValue = modelMapper.map(userEntity, UserDto.class);
 		

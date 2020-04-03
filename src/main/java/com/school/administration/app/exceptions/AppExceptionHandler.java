@@ -29,7 +29,7 @@ public class AppExceptionHandler {
 	
 	@ExceptionHandler(value = {Exception.class})
 	public ResponseEntity<Object> handleOtherException(Exception ex, WebRequest request) {
-		String errorCode = "0";
+		String errorCode = "err99";
 		String status = "failed";
 		
 		HttpStatus oke = HttpStatus.valueOf(200);

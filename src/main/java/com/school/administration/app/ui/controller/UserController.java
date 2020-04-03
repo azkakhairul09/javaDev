@@ -167,8 +167,6 @@ public class UserController {
 			@RequestParam String audienceId, String productId ) throws Exception {
 		InvoiceResponse returnValue = new InvoiceResponse();
 		
-		
-		
 		ModelMapper modelMapper = new ModelMapper();
 		InvoiceDto invoiceDto = modelMapper.map(invoice, InvoiceDto.class);
 		

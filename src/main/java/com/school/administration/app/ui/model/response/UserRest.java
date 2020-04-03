@@ -44,12 +44,12 @@ public class UserRest {
 		return errorCode;
 	}
 	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+		this.errorCode = "0";
 	}
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
-		this.status = status;
+		this.status = "success";
 	}
 }

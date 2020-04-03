@@ -11,7 +11,7 @@ public class UserServiceException extends RuntimeException {
 		super(message);
 	}
 	
-	public UserServiceException(String message, Throwable cause) {
-		super(message, cause);
+	public UserServiceException(String message, Throwable rootCause) {
+		super(message, rootCause);
 	}
 }

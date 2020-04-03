@@ -12,4 +12,5 @@ public interface ProductsRepository extends PagingAndSortingRepository<ProductsE
 	List<ProductsEntity> findAll();
 	ProductsEntity findProductByProductId(String productId);
 	List<ProductsEntity> findProductByExpiredDate(String expiredDate);
+	ProductsEntity findByProductName(String productName);
 }

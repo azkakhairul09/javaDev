@@ -10,6 +10,8 @@ import com.school.administration.app.ui.io.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	UserEntity findByUsername(String username);
+	UserEntity findByEmail(String email);
+	UserEntity findByFullName(String fullName);
 	UserEntity findUserByUserId(String userId);
 	List<UserEntity> findAll();
 }
