@@ -17,13 +17,13 @@ public class AppExceptionHandler {
 
 	@ExceptionHandler(value = {UserServiceException.class})
 	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
-		HttpStatus internalServerError = HttpStatus.valueOf(500);
+		HttpStatus badRequest = HttpStatus.valueOf(400);
 		
 		Date date = Calendar.getInstance().getTime();
 		
-		ErrorMessage errorMessage = new ErrorMessage(date, internalServerError, ex.getLocalizedMessage());
+		ErrorMessage errorMessage = new ErrorMessage(date, badRequest, ex.getLocalizedMessage());
 		
-		return new ResponseEntity<>(errorMessage, internalServerError);
+		return new ResponseEntity<>(errorMessage, badRequest);
 	}
 	
 	@ExceptionHandler(value = {Exception.class})
