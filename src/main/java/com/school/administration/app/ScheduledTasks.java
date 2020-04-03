@@ -32,7 +32,6 @@ public class ScheduledTasks {
     
     @Scheduled(cron = "0 0 6 * * *")
 	public ProductsDto updateExpiredProduct() {
-		
     	ProductsDto returnValue = new ProductsDto();
     	
     	String date = dateFormat.format(new Date());
