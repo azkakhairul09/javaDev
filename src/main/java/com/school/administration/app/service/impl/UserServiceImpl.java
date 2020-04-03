@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.school.administration.app.ui.io.entity.ProductsEntity;
 import com.school.administration.app.ui.io.entity.RoleEntity;
 import com.school.administration.app.ui.io.entity.UserEntity;
+import com.school.administration.app.ui.model.response.UserRest;
 import com.school.administration.app.ScheduledTasks;
 import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.ProductsRepository;
@@ -205,6 +206,12 @@ public class UserServiceImpl implements UserService {
 		
 		if (userEntity == null) throw new UserServiceException(
 				"user not found");
+		
+		if (userEntity != null) {
+			UserRest userRest = new UserRest();
+			userRest.setErrorCode("0");
+			userRest.setStatus("success");
+		}
 		
 		returnValue = modelMapper.map(userEntity, UserDto.class);
 		

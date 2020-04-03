@@ -2,6 +2,8 @@ package com.school.administration.app.ui.model.response;
 
 public class UserRest {
 	
+	private String errorCode;
+	private String status;
 	private String userId;
 	private String fullName;
 	private String username;
@@ -37,5 +39,17 @@ public class UserRest {
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	public String getErrorCode() {
+		return errorCode;
+	}
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

@@ -16,7 +16,7 @@ public class AppExceptionHandler {
 
 	@ExceptionHandler(value = {UserServiceException.class})
 	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
-		String errorCode = "0";
+		String errorCode = "err99";
 		String status = "failed";
 		
 		HttpStatus oke = HttpStatus.valueOf(200);
