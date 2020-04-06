@@ -6,7 +6,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,9 @@ import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.AudienceRepositories;
 import com.school.administration.app.io.repositories.InvoiceRepository;
 import com.school.administration.app.io.repositories.ProductsRepository;
@@ -159,6 +165,45 @@ public class InvoiceServiceImpl implements InvoiceService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<InvoiceDto> getInvoices(int page, int limit) {
+		// TODO Auto-generated method stub
+		List<InvoiceDto> returnValue = new ArrayList<InvoiceDto>();
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		if (page>0) page = page-1;
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<InvoiceEntity> invoicePage = invoiceRepository.findAll(pageableRequest);
+		
+		List<InvoiceEntity> invoices = invoicePage.getContent();
+		
+		for (InvoiceEntity invoiceEntity : invoices) {
+			returnValue.add(modelMapper.map(invoiceEntity, InvoiceDto.class) );
+		}
+		
+		return returnValue;
+	}
+
+	@Override
+	public InvoiceDto getInvoiceByInvoiceId(String invoiceId) {
+		// TODO Auto-generated method stub
+		InvoiceDto returnValue = new InvoiceDto();
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		InvoiceEntity invoiceEntity = invoiceRepository.findInvoiceByInvoiceId(invoiceId);
+		
+		if (invoiceEntity == null) throw new UserServiceException(
+				"invoice not found");
+		
+		returnValue = modelMapper.map(invoiceEntity, InvoiceDto.class);
+		
+		return returnValue;
 	}
 
 }

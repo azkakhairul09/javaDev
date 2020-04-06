@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.RoleRepository;
 import com.school.administration.app.service.RoleService;
 import com.school.administration.app.shared.dto.RoleDto;
@@ -30,8 +31,8 @@ public class RoleServiceImpl implements RoleService{
 		
 		RoleEntity roleEntity = roleRepository.findRoleIdByRoleId(roleId);
 		
-		if (roleEntity == null) throw new UsernameNotFoundException(
-				"Role with ID: " +roleId+ " not found");
+		if (roleEntity == null) throw new UserServiceException(
+				"role id not found");
 		
 		BeanUtils.copyProperties(roleEntity, returnValue);
 		

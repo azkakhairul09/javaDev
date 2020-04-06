@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.AudienceAddressRepositories;
 import com.school.administration.app.io.repositories.AudienceRepositories;
 import com.school.administration.app.service.AudienceService;
@@ -43,7 +44,7 @@ public class AudienceServiceImpl implements AudienceService {
 	@Override
 	public AudienceDto createAudience(AudienceDto audience) {
 		// TODO Auto-generated method stub
-		if(audienceRepositories.findByAudienceName(audience.getAudienceName()) != null) throw new RuntimeException("audience "+audience.getAudienceName()+" is already exists!");
+		if(audienceRepositories.findByAudienceName(audience.getAudienceName()) != null) throw new UserServiceException("audience is already exist!");
 		
 		AudienceDto returnValue = new AudienceDto();
 		AudienceAddressDto address = audience.getAddress();

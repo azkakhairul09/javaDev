@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +33,6 @@ import com.school.administration.app.ui.model.response.ProductResponse;
 
 
 @RestController
-//@RequestMapping("users")
 public class UserController {
 
 	@Autowired
@@ -47,7 +45,7 @@ public class UserController {
 	AudienceService audienceService;
 	
 	@PostMapping(
-		path = "/user/registration",
+		path = "/user-registration",
 		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
@@ -69,7 +67,7 @@ public class UserController {
 	}
 	
 	@PostMapping(
-		path = "/audience/registration",
+		path = "/audience-registration",
 		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
@@ -87,7 +85,7 @@ public class UserController {
 	}
 	
 	@GetMapping(
-			path = "/users", 
+			path = "/get-all-users", 
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
 								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -104,9 +102,9 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@GetMapping(path = "user/{userId}", produces = { MediaType.APPLICATION_XML_VALUE,
+	@GetMapping(path = "/get-user", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	public UserRest getUserDetail(@PathVariable String userId) {
+	public UserRest getUserDetail(@RequestParam(value = "userId") String userId) {
 
 		UserRest returnValue = new UserRest();
 		
@@ -122,7 +120,7 @@ public class UserController {
 	}
 	
 	@PostMapping(
-		path = "/user/create-product",
+		path = "/create-product",
 		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
@@ -140,7 +138,7 @@ public class UserController {
 	}
 	
 	@GetMapping(
-			path = "/products", 
+			path = "/get-all-products", 
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public List<ProductResponse> getProducts(@RequestParam(value = "page", defaultValue = "0") int page,
 								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -157,8 +155,25 @@ public class UserController {
 		return returnValue;
 	}
 	
+	@GetMapping(path = "/get-product", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public ProductResponse getProductDetail(@RequestParam(value = "productId") String productId) {
+
+		ProductResponse returnValue = new ProductResponse();
+		
+		ProductsDto productDto = userService.getProductByProductId(productId);
+		
+		if (productDto != null) {
+			java.lang.reflect.Type listType = new TypeToken<ProductResponse>() {
+			}.getType();
+			returnValue = new ModelMapper().map(productDto, listType);
+		}
+
+		return returnValue;
+	}
+	
 	@PostMapping(
-		path = "/audience/create-invoice",
+		path = "/create-invoice",
 		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
@@ -173,6 +188,41 @@ public class UserController {
 		InvoiceDto createdInvoice = invoiceService.createInvoice(audienceId, productId, invoiceDto);
 		returnValue = modelMapper.map(createdInvoice, InvoiceResponse.class);
 		
+		return returnValue;
+	}
+	
+	@GetMapping(
+			path = "/get-all-invoices", 
+			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public List<InvoiceResponse> getInvoices(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
+		List<InvoiceResponse> returnValue = new ArrayList<>();
+		
+		List<InvoiceDto> invoices = invoiceService.getInvoices(page, limit);
+		
+		if (invoices != null && !invoices.isEmpty()) {
+			java.lang.reflect.Type listType = new TypeToken<List<InvoiceResponse>>() {
+			}.getType();
+			returnValue = new ModelMapper().map(invoices, listType);
+		}
+		
+		return returnValue;
+	}
+	
+	@GetMapping(path = "/get-invoice", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public InvoiceResponse getInvoiceDetail(@RequestParam(value = "invoiceId") String invoiceId) {
+
+		InvoiceResponse returnValue = new InvoiceResponse();
+		
+		InvoiceDto invoiceDto = invoiceService.getInvoiceByInvoiceId(invoiceId);
+		
+		if (invoiceDto != null) {
+			java.lang.reflect.Type listType = new TypeToken<InvoiceResponse>() {
+			}.getType();
+			returnValue = new ModelMapper().map(invoiceDto, listType);
+		}
+
 		return returnValue;
 	}
 }

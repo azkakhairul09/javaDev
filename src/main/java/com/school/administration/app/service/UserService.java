@@ -15,4 +15,5 @@ public interface UserService extends UserDetailsService {
 	ProductsDto createProduct(ProductsDto product);
 	List<ProductsDto> getProducts(int page, int limit);
 	UserDto getUserByUserId(String userId);
+	ProductsDto getProductByProductId(String productId);
 }

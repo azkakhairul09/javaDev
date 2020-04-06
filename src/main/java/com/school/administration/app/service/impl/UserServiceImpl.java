@@ -91,8 +91,9 @@ public class UserServiceImpl implements UserService {
 		if (userRepository.findByUsername(user.getUsername()) != null 
 			&& userRepository.findByEmail(user.getEmail()) != null 
 			&&userRepository.findByFullName(user.getFullName()) != null)
-		throw new RuntimeException("user is duplicate entry");
-		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new RuntimeException("role id not found");
+		throw new UserServiceException("user is duplicate entry");
+		
+		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new UserServiceException("role id not found");
 		
 		if (user != null && roleRepository.findRoleIdByRoleId(roleId) != null) {
 			
@@ -221,6 +222,22 @@ public class UserServiceImpl implements UserService {
 		
 		returnValue = modelMapper.map(userEntity, UserDto.class);
 		
+		return returnValue;
+	}
+
+	@Override
+	public ProductsDto getProductByProductId(String productId) {
+		// TODO Auto-generated method stub
+		ProductsDto returnValue = new ProductsDto();
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		ProductsEntity productEntity = productsRepository.findProductByProductId(productId);
+		
+		if (productEntity == null) throw new UserServiceException(
+				"product not found");
+		
+		returnValue = modelMapper.map(productEntity, ProductsDto.class);
 		return returnValue;
 	}
 }
