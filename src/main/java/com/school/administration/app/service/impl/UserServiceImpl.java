@@ -95,14 +95,6 @@ public class UserServiceImpl implements UserService {
 		
 		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new UserServiceException("role id not found");
 		
-		if (user != null && roleRepository.findRoleIdByRoleId(roleId) != null) {
-			
-			UserDto userDto = new UserDto();
-			userDto.setErrorCode("0");
-			userDto.setStatus("success");
-			
-		}
-		
 		final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));

@@ -2,8 +2,6 @@ package com.school.administration.app.shared.dto;
 
 public class UserDto {
 	private long id;
-	private String errorCode;
-	private String status;
 	private String userId;
 	private RoleDto roleId;
 	private String roleName;
@@ -101,17 +99,5 @@ public class UserDto {
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
-	}
-	public String getErrorCode() {
-		return errorCode;
-	}
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
 	}
 }
