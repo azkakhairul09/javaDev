@@ -22,6 +22,7 @@ import com.school.administration.app.shared.dto.AudienceDto;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
+import com.school.administration.app.ui.model.contentResponse.ContentProducts;
 import com.school.administration.app.ui.model.request.AudienceRequestModel;
 import com.school.administration.app.ui.model.request.InvoiceRequestModel;
 import com.school.administration.app.ui.model.request.ProductReqModel;
@@ -140,9 +141,11 @@ public class UserController {
 	@GetMapping(
 			path = "/get-all-products", 
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public List<ProductResponse> getProducts(@RequestParam(value = "page", defaultValue = "0") int page,
+	public ContentProducts getProducts(@RequestParam(value = "page", defaultValue = "0") int page,
 								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
 		List<ProductResponse> returnValue = new ArrayList<>();
+		
+		ContentProducts result = new ContentProducts();
 		
 		List<ProductsDto> products = userService.getProducts(page, limit);
 		
@@ -152,7 +155,11 @@ public class UserController {
 			returnValue = new ModelMapper().map(products, listType);
 		}
 		
-		return returnValue;
+		result.setContent(returnValue);
+		result.setErrorCode("200");
+		result.setErrorDesc("success get products");
+		
+		return result;
 	}
 	
 	@GetMapping(path = "/get-product", produces = { MediaType.APPLICATION_XML_VALUE,

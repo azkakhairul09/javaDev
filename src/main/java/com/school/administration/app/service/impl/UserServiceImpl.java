@@ -3,6 +3,7 @@ package com.school.administration.app.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -162,15 +163,49 @@ public class UserServiceImpl implements UserService {
 		 
 		String timeStr = formatter.format(currentTime.getTime());
 		
+		
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date d1 = null;
+		Date d2 = null;
+
 		ModelMapper modelMapper = new ModelMapper();
 		ProductsEntity productEntity = modelMapper.map(product, ProductsEntity.class);
+		
+		try {
+			d1 = format.parse(productEntity.getExpiredDate());
+			d2 = format.parse(timeStr);
+
+			//in milliseconds
+			long diff = d1.getTime() - d2.getTime();
+			
+			System.out.println(diff);
+			char first = String.valueOf(diff).charAt(0);
+			System.out.println(first);
+			
+			if (first == '-') 
+			{
+				productEntity.setIsExpired(true);
+			} 
+			else if (diff == 0)
+			{
+				productEntity.setIsExpired(true);
+			}
+			else 
+			{
+				productEntity.setIsExpired(false);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
 		
 		String productID = utils.generateProductId(5);
 		
 		productEntity.setProductId(productID);
 		productEntity.setCreatedBy(authentication.getName());
 		productEntity.setCreatedDate(timeStr);
-		productEntity.setIsExpired(false);
 		
 		ProductsEntity productDetail = productRepository.save(productEntity);
 		
