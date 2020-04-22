@@ -74,6 +74,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		invoiceEntity.setAudienceId(audienceEntity);
 		
 		ProductsEntity productEntity = productsRepository.findProductByProductId(productId);
+		if(productEntity.getIsExpired() == true) throw new UserServiceException("product is expired");
 		invoiceEntity.setProductId(productEntity);
 		
 		invoiceEntity.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+audienceEntity.getAudienceName());
@@ -85,7 +86,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		try {		
 			
 			QrenInvoiceDto qrenInvoiceDto = new QrenInvoiceDto();
-			qrenInvoiceDto.setMerchantApiKey("195261121247");
+			qrenInvoiceDto.setMerchantApiKey("195281683222");
 			qrenInvoiceDto.setNominal(productEntity.getPrice());
 			qrenInvoiceDto.setStaticQr("0");
 			qrenInvoiceDto.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+audienceEntity.getAudienceName());
@@ -129,7 +130,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 			System.out.println(e);
 		}
 		
-		final String DATE_FORMAT = "dd/MM/yyyy";
+		final String DATE_FORMAT = "dd-MM-yyyy";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -143,7 +144,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		
 		invoiceEntity.setCreatedBy(authentication.getName());
 		
-		final String CREATED_DATE = "dd/MM/yyyy HH:mm:ss";
+		final String CREATED_DATE = "dd-MM-yyyy HH:mm:ss";
 		SimpleDateFormat format = new SimpleDateFormat(CREATED_DATE);
 		format.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		

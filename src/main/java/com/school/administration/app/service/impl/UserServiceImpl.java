@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.school.administration.app.ui.io.entity.ProductsEntity;
 import com.school.administration.app.ui.io.entity.RoleEntity;
 import com.school.administration.app.ui.io.entity.UserEntity;
+import com.school.administration.app.ui.io.entity.UserRoleEntity;
 import com.school.administration.app.ScheduledTasks;
 import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.ProductsRepository;
@@ -90,13 +91,13 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		//validation
 		if (userRepository.findByUsername(user.getUsername()) != null 
-			&& userRepository.findByEmail(user.getEmail()) != null 
-			&&userRepository.findByFullName(user.getFullName()) != null)
+			|| userRepository.findByEmail(user.getEmail()) != null 
+			|| userRepository.findByFullName(user.getFullName()) != null)
 		throw new UserServiceException("user is duplicate entry");
 		
 		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new UserServiceException("role id not found");
 		
-		final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -110,13 +111,18 @@ public class UserServiceImpl implements UserService {
 		
 		RoleEntity roleEntity = roleRepository.findRoleIdByRoleId(roleId);
 		
-		String publicUserId = utils.generateUserId(30);
+		String publicUserId = utils.generateUserId(9);
 		userEntity.setEncryptPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		userEntity.setUserId(publicUserId);
 		userEntity.setIsActive(true);
 		userEntity.setRoleId(roleEntity);
 		userEntity.setRoleName(roleEntity.getRoleName());
 		userEntity.setCreatedDate(timeStr);
+		
+		UserRoleEntity userRoleEntity = new UserRoleEntity();
+		
+		userRoleEntity.setUserId(publicUserId);
+		userRoleEntity.setRoleId(roleId);
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
@@ -148,14 +154,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ProductsDto createProduct(ProductsDto product) {
+	public UserDto disactiveUser(String userId, UserDto userDto) {
 		// TODO Auto-generated method stub
-		if (productRepository.findByProductName(product.getProductName()) != null) throw new UserServiceException("product is duplicate entry");
+		UserDto returnValue = new UserDto();
+		UserEntity userEntity = userRepository.findUserByUserId(userId);
 		
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
+		if (userEntity == null) throw new UserServiceException("user not found");
+		if (userEntity.getIsActive() == false) throw new UserServiceException("user is not active");
 		
-		final String DATE_FORMAT = "dd/MM/yyyy";
+		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -163,8 +170,37 @@ public class UserServiceImpl implements UserService {
 		 
 		String timeStr = formatter.format(currentTime.getTime());
 		
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        
+		userEntity.setIsActive(false);
+		userEntity.setModifiedDate(timeStr);
+		userEntity.setModifiedBy(authentication.getName());
 		
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		UserEntity disactiveUser = userRepository.save(userEntity);
+		
+		BeanUtils.copyProperties(disactiveUser, returnValue);
+		
+		return returnValue;
+	}
+
+	@Override
+	public ProductsDto createProduct(ProductsDto product) {
+		// TODO Auto-generated method stub
+		if (productRepository.findByProductName(product.getProductName()) != null) throw new UserServiceException("product is duplicate entry");
+		
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+		
+		final String DATE_FORMAT = "dd-MM-yyyy";
+		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		 
+		Calendar currentTime = Calendar.getInstance();
+		 
+		String timeStr = formatter.format(currentTime.getTime());
+		
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 
 		Date d1 = null;
 		Date d2 = null;
@@ -179,9 +215,7 @@ public class UserServiceImpl implements UserService {
 			//in milliseconds
 			long diff = d1.getTime() - d2.getTime();
 			
-			System.out.println(diff);
 			char first = String.valueOf(diff).charAt(0);
-			System.out.println(first);
 			
 			if (first == '-') 
 			{

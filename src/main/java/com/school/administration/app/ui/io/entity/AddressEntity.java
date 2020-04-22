@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.TableGenerator;
 
 @Entity(name="address")
-public class AudienceAddress implements Serializable {
+public class AddressEntity implements Serializable {
 
 	/**
 	 * 

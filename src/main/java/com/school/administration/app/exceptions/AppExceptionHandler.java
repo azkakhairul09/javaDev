@@ -2,6 +2,7 @@ package com.school.administration.app.exceptions;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,7 +23,19 @@ public class AppExceptionHandler {
 	
 		String queryString = request.getRequestURI();
 		
-		System.out.println(queryString);
+		Enumeration<String> parameterNames = request.getParameterNames();
+		 
+        while (parameterNames.hasMoreElements()) {
+ 
+            String paramName = parameterNames.nextElement();
+ 
+            String[] paramValues = request.getParameterValues(paramName);
+            for (int i = 0; i < paramValues.length; i++) {
+                String paramValue = paramValues[i];
+                System.out.println(paramName + " : " +paramValue);
+            }
+ 
+        }
 		
 		if (queryString.equals("/school_administration/get-user") && queryString.equals("/school_administration/get-all-users")) 
 		{	
@@ -39,6 +52,17 @@ public class AppExceptionHandler {
 		{
 			String errorCode = "err41";
 			String status = "failed create user";
+			HttpStatus oke = HttpStatus.valueOf(200);
+			Date date = Calendar.getInstance().getTime();
+			
+			ErrorMessage errorMessage = new ErrorMessage(errorCode, status, ex.getLocalizedMessage(), date);
+			
+			return new ResponseEntity<>(errorMessage, oke);	
+		}
+		else if (queryString.equals("/school_administration/disactivate-user")) 
+		{
+			String errorCode = "err41";
+			String status = "failed";
 			HttpStatus oke = HttpStatus.valueOf(200);
 			Date date = Calendar.getInstance().getTime();
 			

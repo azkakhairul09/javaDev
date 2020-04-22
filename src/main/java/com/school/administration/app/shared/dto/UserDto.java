@@ -3,7 +3,7 @@ package com.school.administration.app.shared.dto;
 public class UserDto {
 	private long id;
 	private String userId;
-	private RoleDto roleId;
+	private String roleId;
 	private String roleName;
 	private String fullName;
 	private String username;
@@ -28,10 +28,10 @@ public class UserDto {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public RoleDto getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
-	public void setRoleId(RoleDto roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 	public String getRoleName() {

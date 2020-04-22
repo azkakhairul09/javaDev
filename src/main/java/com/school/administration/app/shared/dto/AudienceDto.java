@@ -21,8 +21,9 @@ public class AudienceDto implements Serializable{
 	private Boolean isActive;
 	private String password;
 	private String encryptPassword;
+	private String roleId;
 	private Set<InvoiceDto> invoice;
-	private AudienceAddressDto address;
+	private AddressDto address;
 	
 	public long getId() {
 		return id;
@@ -96,10 +97,16 @@ public class AudienceDto implements Serializable{
 	public void setEncryptPassword(String encryptPassword) {
 		this.encryptPassword = encryptPassword;
 	}
-	public AudienceAddressDto getAddress() {
+	public String getRoleId() {
+		return roleId;
+	}
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	public AddressDto getAddress() {
 		return address;
 	}
-	public void setAddress(AudienceAddressDto address) {
+	public void setAddress(AddressDto address) {
 		this.address = address;
 	}
 	public String getPassword() {

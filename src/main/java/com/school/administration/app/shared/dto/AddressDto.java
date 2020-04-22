@@ -2,7 +2,7 @@ package com.school.administration.app.shared.dto;
 
 import java.io.Serializable;
 
-public class AudienceAddressDto implements Serializable{
+public class AddressDto implements Serializable{
 
 	/**
 	 * 

@@ -65,9 +65,11 @@ public class AudienceEntity implements Serializable {
 	@Column(nullable = true)
 	private String encryptPassword;
 	
+	private String roleId;
+	
 	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "address_id")
-	private AudienceAddress address;
+	private AddressEntity address;
 	
 	@OneToMany(mappedBy = "audienceId", cascade = CascadeType.ALL)
 	private Set<InvoiceEntity> invoice;
@@ -168,12 +170,20 @@ public class AudienceEntity implements Serializable {
 		this.encryptPassword = encryptPassword;
 	}
 
-	public AudienceAddress getAddress() {
+	public AddressEntity getAddress() {
 		return address;
 	}
 
-	public void setAddress(AudienceAddress address) {
+	public void setAddress(AddressEntity address) {
 		this.address = address;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 
 	public Set<InvoiceEntity> getInvoice() {

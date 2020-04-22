@@ -2,13 +2,13 @@ package com.school.administration.app.ui.model.response;
 
 public class UserRest {
 	
-	private String errorCode;
-	private String status;
 	private String userId;
 	private String fullName;
 	private String username;
 	private String email;
 	private String roleName;
+	private Boolean isActive;
+	private String createdDate;
 	
 	public String getUserId() {
 		return userId;
@@ -40,16 +40,16 @@ public class UserRest {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public String getErrorCode() {
-		return errorCode;
+	public Boolean getIsActive() {
+		return isActive;
 	}
-	public void setErrorCode(String errorCode) {
-		this.errorCode = "0";
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
-	public String getStatus() {
-		return status;
+	public String getCreatedDate() {
+		return createdDate;
 	}
-	public void setStatus(String status) {
-		this.status = "success";
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 }

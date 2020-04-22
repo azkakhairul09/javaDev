@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +24,7 @@ import com.school.administration.app.ui.io.entity.ProductsEntity;
 @Component
 public class ScheduledTasks {
 	private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
     @Autowired
     ProductsRepository productRepository;
@@ -34,7 +36,13 @@ public class ScheduledTasks {
 	public ProductsDto updateExpiredProduct() {
     	ProductsDto returnValue = new ProductsDto();
     	
-    	String date = dateFormat.format(new Date());
+    	final String DATE_FORMAT = "dd-MM-yyyy";
+		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		 
+		Calendar currentTime = Calendar.getInstance();
+		 
+		String date = formatter.format(currentTime.getTime());
 		
 		List<ProductsEntity> productEntity = new ArrayList<ProductsEntity>();
 		productEntity = productRepository.findProductByExpiredDate(date);
@@ -63,7 +71,7 @@ public class ScheduledTasks {
     	Calendar calendar = Calendar.getInstance();
     	calendar.add(Calendar.HOUR_OF_DAY, -1);
     	Date date = calendar.getTime();
-    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     	String newStopTime = sdfStopTime.format(date);
     	
 		List<InvoiceEntity> invoiceEntity = new ArrayList<InvoiceEntity>();

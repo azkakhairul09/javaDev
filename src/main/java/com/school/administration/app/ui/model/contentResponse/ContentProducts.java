@@ -2,14 +2,10 @@ package com.school.administration.app.ui.model.contentResponse;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.school.administration.app.ui.model.response.ProductResponse;
 
 public class ContentProducts {
 
-	HttpServletRequest request;
-	
 	private String errorCode;
 	private String errorDesc;
 	private List<ProductResponse> content;

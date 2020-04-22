@@ -96,8 +96,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 					
 					// Creating Object of ObjectMapper define in Jakson Api 
 			        ObjectMapper Obj = new ObjectMapper(); 
-			        
-			        System.out.println(creds);
 			  
 			        try { 
 			            // set object as a json string 
