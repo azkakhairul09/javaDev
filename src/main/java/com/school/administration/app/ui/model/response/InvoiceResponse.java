@@ -5,7 +5,7 @@ public class InvoiceResponse {
 	private String invoiceName;
 	private String nominal;
 	private String productName;
-	private String audienceName;
+	private String username;
 	private String invoiceDate;
 	private String qrContent;
 	public String getInvoiceId() {
@@ -32,12 +32,6 @@ public class InvoiceResponse {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public String getAudienceName() {
-		return audienceName;
-	}
-	public void setAudienceName(String audienceName) {
-		this.audienceName = audienceName;
-	}
 	public String getInvoiceDate() {
 		return invoiceDate;
 	}
@@ -49,5 +43,11 @@ public class InvoiceResponse {
 	}
 	public void setQrContent(String qrContent) {
 		this.qrContent = qrContent;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

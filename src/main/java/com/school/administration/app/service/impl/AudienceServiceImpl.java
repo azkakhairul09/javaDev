@@ -85,7 +85,6 @@ public class AudienceServiceImpl implements AudienceService {
 		
 		UserRoleEntity userRoleEntity = new UserRoleEntity();
 		
-		userRoleEntity.setAudienceId(audienceId);
 		userRoleEntity.setRoleId(roleId);
 		
 		userRoleRepositories.save(userRoleEntity);

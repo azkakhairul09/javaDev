@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.TableGenerator;
 
-@Entity(name = "invoice")
+@Entity(name = "t_invoice")
 public class InvoiceEntity implements Serializable{
 	
 	/**
@@ -38,8 +38,8 @@ public class InvoiceEntity implements Serializable{
 	private ProductsEntity productId;
 	
 	@ManyToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name="audience_id")
-	private AudienceEntity audienceId;
+	@JoinColumn(name="user_id")
+	private UserEntity userId;
 	
 	@Column(nullable = false)
 	private String nominal;
@@ -103,12 +103,12 @@ public class InvoiceEntity implements Serializable{
 		this.productId = productId;
 	}
 
-	public AudienceEntity getAudienceId() {
-		return audienceId;
+	public UserEntity getUserId() {
+		return userId;
 	}
 
-	public void setAudienceId(AudienceEntity audienceId) {
-		this.audienceId = audienceId;
+	public void setUserId(UserEntity userId) {
+		this.userId = userId;
 	}
 
 	public String getNominal() {

@@ -30,22 +30,22 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.school.administration.app.exceptions.UserServiceException;
-import com.school.administration.app.io.repositories.AudienceRepositories;
 import com.school.administration.app.io.repositories.InvoiceRepository;
 import com.school.administration.app.io.repositories.ProductsRepository;
+import com.school.administration.app.io.repositories.UserRepository;
 import com.school.administration.app.service.InvoiceService;
 import com.school.administration.app.shared.Utils;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.QrenInvoiceDto;
-import com.school.administration.app.ui.io.entity.AudienceEntity;
 import com.school.administration.app.ui.io.entity.InvoiceEntity;
 import com.school.administration.app.ui.io.entity.ProductsEntity;
+import com.school.administration.app.ui.io.entity.UserEntity;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService{
 
 	@Autowired
-	AudienceRepositories audienceRepositories;
+	UserRepository userRepository;
 	
 	@Autowired
 	ProductsRepository productsRepository;
@@ -60,7 +60,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 	Utils utils;
 	
 	@Override
-	public InvoiceDto createInvoice(String audienceId, String productId, InvoiceDto invoice) {
+	public InvoiceDto createInvoice(String userId, String productId, InvoiceDto invoice) {
 		// TODO Auto-generated method stub	
 		
 		SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -70,14 +70,14 @@ public class InvoiceServiceImpl implements InvoiceService{
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		InvoiceEntity invoiceEntity = modelMapper.map(invoice, InvoiceEntity.class);
 		
-		AudienceEntity audienceEntity = audienceRepositories.findAudienceByAudienceId(audienceId);
-		invoiceEntity.setAudienceId(audienceEntity);
+		UserEntity userEntity = userRepository.findUserByUserId(userId);
+		invoiceEntity.setUserId(userEntity);
 		
 		ProductsEntity productEntity = productsRepository.findProductByProductId(productId);
 		if(productEntity.getIsExpired() == true) throw new UserServiceException("product is expired");
 		invoiceEntity.setProductId(productEntity);
 		
-		invoiceEntity.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+audienceEntity.getAudienceName());
+		invoiceEntity.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+userEntity.getFullName());
 		invoiceEntity.setNominal(productEntity.getPrice());
 		invoiceEntity.setInfo(invoiceEntity.getInvoiceName());
 		
@@ -89,7 +89,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 			qrenInvoiceDto.setMerchantApiKey("195281683222");
 			qrenInvoiceDto.setNominal(productEntity.getPrice());
 			qrenInvoiceDto.setStaticQr("0");
-			qrenInvoiceDto.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+audienceEntity.getAudienceName());
+			qrenInvoiceDto.setInvoiceName("Invoice Pembayaran "+productEntity.getProductName()+" a/n "+userEntity.getFullName());
 			qrenInvoiceDto.setQrGaruda("1");
 			qrenInvoiceDto.setInfo(invoiceEntity.getInvoiceName());
 			

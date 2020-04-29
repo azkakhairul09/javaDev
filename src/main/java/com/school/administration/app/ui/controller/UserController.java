@@ -15,16 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.school.administration.app.service.AddressService;
 import com.school.administration.app.service.AudienceService;
 import com.school.administration.app.service.InvoiceService;
 import com.school.administration.app.service.UserService;
-import com.school.administration.app.shared.dto.AddressDto;
 import com.school.administration.app.shared.dto.AudienceDto;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
-import com.school.administration.app.ui.model.contentResponse.ContentAddress;
 import com.school.administration.app.ui.model.contentResponse.ContentAudience;
 import com.school.administration.app.ui.model.contentResponse.ContentAudiences;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoice;
@@ -35,12 +32,11 @@ import com.school.administration.app.ui.model.contentResponse.ContentUser;
 import com.school.administration.app.ui.model.contentResponse.ContentUsers;
 import com.school.administration.app.ui.model.request.AudienceRequestModel;
 import com.school.administration.app.ui.model.request.InvoiceRequestModel;
-import com.school.administration.app.ui.model.request.ProductReqModel;
+import com.school.administration.app.ui.model.request.ProductRequestModel;
 import com.school.administration.app.ui.model.request.UserRequestModel;
-import com.school.administration.app.ui.model.response.AddressResponse;
 import com.school.administration.app.ui.model.response.AudienceResponse;
 import com.school.administration.app.ui.model.response.InvoiceResponse;
-import com.school.administration.app.ui.model.response.UserRest;
+import com.school.administration.app.ui.model.response.UserResponse;
 import com.school.administration.app.ui.model.response.ProductResponse;
 
 
@@ -56,8 +52,6 @@ public class UserController {
 	@Autowired
 	AudienceService audienceService;
 
-	@Autowired
-	AddressService addressService;
 	
 	@PostMapping(
 		path = "/audience-registration",
@@ -137,9 +131,8 @@ public class UserController {
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
 	public ContentUser createUser(
-			@RequestParam String roleId,
 			@RequestBody UserRequestModel user) throws Exception {
-		UserRest returnValue = new UserRest();
+		UserResponse returnValue = new UserResponse();
 		
 		ContentUser result = new ContentUser();
 		
@@ -149,8 +142,8 @@ public class UserController {
 		ModelMapper modelMapper = new ModelMapper();
 		UserDto userDto = modelMapper.map(user, UserDto.class);
 		
-		UserDto createdUser = userService.createUser(roleId, userDto);
-		returnValue = modelMapper.map(createdUser, UserRest.class);
+		UserDto createdUser = userService.createUser(userDto);
+		returnValue = modelMapper.map(createdUser, UserResponse.class);
 		
 		result.setContent(returnValue);
 		result.setErrorCode("201");
@@ -164,14 +157,14 @@ public class UserController {
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ContentUsers getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
 								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
-		List<UserRest> returnValue = new ArrayList<>();
+		List<UserResponse> returnValue = new ArrayList<>();
 		
 		ContentUsers result = new ContentUsers();
 		
 		List<UserDto> users = userService.getUsers(page, limit);
 		
 		if (users != null && !users.isEmpty()) {
-			java.lang.reflect.Type listType = new TypeToken<List<UserRest>>() {
+			java.lang.reflect.Type listType = new TypeToken<List<UserResponse>>() {
 			}.getType();
 			returnValue = new ModelMapper().map(users, listType);
 		}
@@ -187,14 +180,14 @@ public class UserController {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ContentUser getUserDetail(@RequestParam(value = "userId") String userId) {
 
-		UserRest returnValue = new UserRest();
+		UserResponse returnValue = new UserResponse();
 		
 		ContentUser result = new ContentUser();
 		
 		UserDto userDto = userService.getUserByUserId(userId);
 		
 		if (userDto != null) {
-			java.lang.reflect.Type listType = new TypeToken<UserRest>() {
+			java.lang.reflect.Type listType = new TypeToken<UserResponse>() {
 			}.getType();
 			returnValue = new ModelMapper().map(userDto, listType);
 		}
@@ -211,7 +204,7 @@ public class UserController {
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
 	public ContentUser disactivateUser(@RequestParam(value = "userId") String userId) {
-		UserRest returnValue = new UserRest();
+		UserResponse returnValue = new UserResponse();
 		
 		ContentUser result = new ContentUser();
 		
@@ -233,7 +226,7 @@ public class UserController {
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
 		)
 	public ContentProduct createProduct(
-			@RequestBody ProductReqModel product) throws Exception {
+			@RequestBody ProductRequestModel product) throws Exception {
 		ProductResponse returnValue = new ProductResponse();
 		
 		ContentProduct result = new ContentProduct();
@@ -305,13 +298,13 @@ public class UserController {
 		)
 	public InvoiceResponse createInvoice(
 			InvoiceRequestModel invoice,
-			@RequestParam String audienceId, String productId ) throws Exception {
+			@RequestParam String userId, String productId ) throws Exception {
 		InvoiceResponse returnValue = new InvoiceResponse();
 		
 		ModelMapper modelMapper = new ModelMapper();
 		InvoiceDto invoiceDto = modelMapper.map(invoice, InvoiceDto.class);
 		
-		InvoiceDto createdInvoice = invoiceService.createInvoice(audienceId, productId, invoiceDto);
+		InvoiceDto createdInvoice = invoiceService.createInvoice(userId, productId, invoiceDto);
 		returnValue = modelMapper.map(createdInvoice, InvoiceResponse.class);
 		
 		return returnValue;
@@ -363,27 +356,27 @@ public class UserController {
 		
 		return result;
 	}
-	
-	@GetMapping(path = "/get-address", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
-	public ContentAddress getAddress(@RequestParam(value = "audienceId") String audienceId) {
-
-		AddressResponse returnValue = new AddressResponse();
-		
-		ContentAddress result = new ContentAddress();
-		
-		AddressDto addressDto = addressService.getAddressByAudienceId(audienceId);
-		
-		if (addressDto != null) {
-			java.lang.reflect.Type listType = new TypeToken<AddressResponse>() {
-			}.getType();
-			returnValue = new ModelMapper().map(addressDto, listType);
-		}
-
-		result.setContent(returnValue);
-		result.setErrorCode("0");
-		result.setErrorDesc("success get address");
-		
-		return result;
-	}
+//	
+//	@GetMapping(path = "/get-address", produces = { MediaType.APPLICATION_XML_VALUE,
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public ContentAddress getAddress(@RequestParam(value = "userId") String userId) {
+//
+//		AddressResponse returnValue = new AddressResponse();
+//		
+//		ContentAddress result = new ContentAddress();
+//		
+//		AddressDto addressDto = addressService.getAddressByAudienceId(userId);
+//		
+//		if (addressDto != null) {
+//			java.lang.reflect.Type listType = new TypeToken<AddressResponse>() {
+//			}.getType();
+//			returnValue = new ModelMapper().map(addressDto, listType);
+//		}
+//
+//		result.setContent(returnValue);
+//		result.setErrorCode("0");
+//		result.setErrorDesc("success get address");
+//		
+//		return result;
+//	}
 }

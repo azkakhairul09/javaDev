@@ -1,16 +1,13 @@
 package com.school.administration.app.ui.io.entity;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.TableGenerator;
 
-@Entity(name="address")
+@Entity(name="user_address")
 public class AddressEntity implements Serializable {
 
 	/**
@@ -25,29 +22,21 @@ public class AddressEntity implements Serializable {
 			valueColumnName="sequence_value", allocationSize =1, initialValue=0)
 	private long id;
 	
-	@Column(nullable = true)
+	private String userId;
+	
 	private String addressId;
 	
-	@Column(nullable = false)
 	private String fullAddress;
 	
-	@Column(nullable = false)
 	private String province;
 	
-	@Column(nullable = false)
 	private String city;
 	
-	@Column(nullable = false)
 	private String district;
 	
-	@Column(nullable = false)
 	private String subDistrict;
 	
-	@Column(nullable = false, length = 5)
 	private String postalCode;
-	
-	@OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
-	private AudienceEntity audienceDetail;
 
 	public long getId() {
 		return id;
@@ -112,12 +101,12 @@ public class AddressEntity implements Serializable {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-
-	public AudienceEntity getAudienceDetail() {
-		return audienceDetail;
+	
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setAudienceDetail(AudienceEntity audienceDetail) {
-		this.audienceDetail = audienceDetail;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

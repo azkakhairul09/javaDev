@@ -1,6 +1,6 @@
 package com.school.administration.app.ui.model.request;
 
-public class ProductReqModel {
+public class ProductRequestModel {
 	private String productName;
 	private String price;
 	private String quantity;

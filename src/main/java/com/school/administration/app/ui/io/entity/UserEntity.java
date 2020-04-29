@@ -1,6 +1,7 @@
 package com.school.administration.app.ui.io.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.TableGenerator;
 
 @Entity(name="user")
@@ -35,11 +37,17 @@ public class UserEntity implements Serializable{
 	@Column(nullable = false, length = 100)
 	private String email;
 	
-	@Column(nullable = false, length = 50)
-	private String jabatan;
+	@Column(nullable = false)
+	private String gender;
 	
 	@Column(nullable = false)
-	private String roleName;
+	private String birthPlace;
+	
+	@Column(nullable = false)
+	private String birthDate;
+	
+	@Column(nullable = false)
+	private String phoneNumber;
 	
 	@Column(nullable = false)
 	private String createdDate;
@@ -58,7 +66,10 @@ public class UserEntity implements Serializable{
 	
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="role_id")
-	private RoleEntity roleId;
+	private RoleEntity role;
+	
+	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+	private Set<InvoiceEntity> invoice;
 
 	public long getId() {
 		return id;
@@ -90,14 +101,6 @@ public class UserEntity implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getJabatan() {
-		return jabatan;
-	}
-
-	public void setJabatan(String jabatan) {
-		this.jabatan = jabatan;
 	}
 
 	public String getCreatedDate() {
@@ -140,20 +143,12 @@ public class UserEntity implements Serializable{
 		this.isActive = isActive;
 	}
 
-	public RoleEntity getRoleId() {
-		return roleId;
+	public RoleEntity getRole() {
+		return role;
 	}
 
-	public void setRoleId(RoleEntity roleId) {
-		this.roleId = roleId;
-	}
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setRole(RoleEntity role) {
+		this.role = role;
 	}
 
 	public String getFullName() {
@@ -162,5 +157,45 @@ public class UserEntity implements Serializable{
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getBirthPlace() {
+		return birthPlace;
+	}
+
+	public void setBirthPlace(String birthPlace) {
+		this.birthPlace = birthPlace;
+	}
+
+	public String getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Set<InvoiceEntity> getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(Set<InvoiceEntity> invoice) {
+		this.invoice = invoice;
 	}
 }

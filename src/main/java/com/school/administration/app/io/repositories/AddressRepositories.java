@@ -7,5 +7,5 @@ import com.school.administration.app.ui.io.entity.AddressEntity;
 
 @Repository
 public interface AddressRepositories extends PagingAndSortingRepository<AddressEntity, Long> {
-	AddressEntity findAddressByAudienceId(String audienceId);
+	
 }

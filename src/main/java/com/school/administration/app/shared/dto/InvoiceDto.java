@@ -11,7 +11,7 @@ public class InvoiceDto implements Serializable{
 	private String invoiceId;
 	private String invoiceName;
 	private ProductsDto productId;
-	private AudienceDto audienceId;
+	private UserDto userId;
 	private String nominal;
 	private String info;
 	private String invoiceDate;
@@ -46,12 +46,6 @@ public class InvoiceDto implements Serializable{
 	}
 	public void setProductId(ProductsDto productId) {
 		this.productId = productId;
-	}
-	public AudienceDto getAudienceId() {
-		return audienceId;
-	}
-	public void setAudienceId(AudienceDto audienceId) {
-		this.audienceId = audienceId;
 	}
 	public String getNominal() {
 		return nominal;
@@ -112,5 +106,11 @@ public class InvoiceDto implements Serializable{
 	}
 	public void setIsExpired(Boolean isExpired) {
 		this.isExpired = isExpired;
+	}
+	public UserDto getUserId() {
+		return userId;
+	}
+	public void setUserId(UserDto userId) {
+		this.userId = userId;
 	}
 }

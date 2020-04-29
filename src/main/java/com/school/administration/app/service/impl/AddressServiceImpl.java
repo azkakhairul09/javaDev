@@ -19,21 +19,21 @@ public class AddressServiceImpl implements AddressService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public AddressDto getAddressByAudienceId(String audienceId) {
-		// TODO Auto-generated method stub
-		AddressDto returnValue = new AddressDto();
-		
-		ModelMapper modelMapper = new ModelMapper();
-		
-		AddressEntity addressEntity = audienceAdressRepositories.findAddressByAudienceId(audienceId);
-		
-		if (addressEntity == null) throw new UserServiceException("audience not found");
-		
-		returnValue = modelMapper.map(addressEntity, AddressDto.class);
-		
-		return returnValue;
-	}
-	
+//
+//	@Override
+//	public AddressDto getAddressByAudienceId(String audienceId) {
+//		// TODO Auto-generated method stub
+//		AddressDto returnValue = new AddressDto();
+//		
+//		ModelMapper modelMapper = new ModelMapper();
+//		
+//		AddressEntity addressEntity = audienceAdressRepositories.findAddressByAudienceId(audienceId);
+//		
+//		if (addressEntity == null) throw new UserServiceException("audience not found");
+//		
+//		returnValue = modelMapper.map(addressEntity, AddressDto.class);
+//		
+//		return returnValue;
+//	}
+//	
 }

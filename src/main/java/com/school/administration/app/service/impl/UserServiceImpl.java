@@ -28,9 +28,11 @@ import com.school.administration.app.ui.io.entity.UserEntity;
 import com.school.administration.app.ui.io.entity.UserRoleEntity;
 import com.school.administration.app.ScheduledTasks;
 import com.school.administration.app.exceptions.UserServiceException;
+import com.school.administration.app.io.repositories.AddressRepositories;
 import com.school.administration.app.io.repositories.ProductsRepository;
 import com.school.administration.app.io.repositories.RoleRepository;
 import com.school.administration.app.io.repositories.UserRepository;
+import com.school.administration.app.io.repositories.UserRoleRepositories;
 import com.school.administration.app.shared.Utils;
 import com.school.administration.app.service.UserService;
 import com.school.administration.app.shared.dto.ProductsDto;
@@ -50,6 +52,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	ProductsRepository productRepository;
+	
+	@Autowired
+	AddressRepositories addressRepository;
+	
+	@Autowired
+	UserRoleRepositories userRoleRepository;
 	
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -87,15 +95,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto createUser(String roleId, UserDto user) {
+	public UserDto createUser(UserDto user) {
 		// TODO Auto-generated method stub
 		//validation
-		if (userRepository.findByUsername(user.getUsername()) != null 
-			|| userRepository.findByEmail(user.getEmail()) != null 
-			|| userRepository.findByFullName(user.getFullName()) != null)
-		throw new UserServiceException("user is duplicate entry");
-		
-		if (roleRepository.findRoleIdByRoleId(roleId) == null) throw new UserServiceException("role id not found");
+//		if (userRepository.findByUsername(user.getUsername()) != null 
+//			|| userRepository.findByEmail(user.getEmail()) != null 
+//			|| userRepository.findByFullName(user.getFullName()) != null)
+//		throw new UserServiceException("user is duplicate entry");
 		
 		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
@@ -109,20 +115,21 @@ public class UserServiceImpl implements UserService {
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 //		BeanUtils.copyProperties(user, userEntity);
 		
-		RoleEntity roleEntity = roleRepository.findRoleIdByRoleId(roleId);
+		RoleEntity roleEntity = roleRepository.findRoleIdByRoleId("2");
 		
 		String publicUserId = utils.generateUserId(9);
 		userEntity.setEncryptPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		userEntity.setUserId(publicUserId);
 		userEntity.setIsActive(true);
-		userEntity.setRoleId(roleEntity);
-		userEntity.setRoleName(roleEntity.getRoleName());
+		userEntity.setRole(roleEntity);
 		userEntity.setCreatedDate(timeStr);
 		
 		UserRoleEntity userRoleEntity = new UserRoleEntity();
 		
 		userRoleEntity.setUserId(publicUserId);
-		userRoleEntity.setRoleId(roleId);
+		userRoleEntity.setRoleId("2");
+		
+		userRoleRepository.save(userRoleEntity);
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		

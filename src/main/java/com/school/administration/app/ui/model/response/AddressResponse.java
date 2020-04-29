@@ -8,6 +8,7 @@ public class AddressResponse {
 	private String district;
 	private String subDistrict;
 	private String postalCode;
+	
 	public String getAddressId() {
 		return addressId;
 	}

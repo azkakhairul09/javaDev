@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.TableGenerator;
 
-@Entity(name="role")
+@Entity(name="t_role")
 public class RoleEntity implements Serializable{
 	private static final long serialVersionUID = -4465726475061969211L;
 	
@@ -29,7 +29,7 @@ public class RoleEntity implements Serializable{
 	@Column(nullable = false)
 	private String roleName;
 
-	@OneToMany(mappedBy = "roleId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 	private Set<UserEntity> users;
 	
 	public long getId() {

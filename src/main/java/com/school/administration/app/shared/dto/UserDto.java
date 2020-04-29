@@ -1,14 +1,19 @@
 package com.school.administration.app.shared.dto;
 
+import java.util.Set;
+
 public class UserDto {
 	private long id;
 	private String userId;
-	private String roleId;
-	private String roleName;
+	private RoleDto role;
 	private String fullName;
 	private String username;
 	private String email;
-	private String jabatan;
+	private String gender;
+	private String birthPlace;
+	private String birthDate;
+	private String phoneNumber;
+	private Set<InvoiceDto> invoice;
 	private String createdDate;
 	private String modifiedBy;
 	private String modifiedDate;
@@ -28,18 +33,6 @@ public class UserDto {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
 	public String getUsername() {
 		return username;
 	}
@@ -51,12 +44,6 @@ public class UserDto {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getJabatan() {
-		return jabatan;
-	}
-	public void setJabatan(String jabatan) {
-		this.jabatan = jabatan;
 	}
 	public String getCreatedDate() {
 		return createdDate;
@@ -99,5 +86,41 @@ public class UserDto {
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getBirthPlace() {
+		return birthPlace;
+	}
+	public void setBirthPlace(String birthPlace) {
+		this.birthPlace = birthPlace;
+	}
+	public String getBirthDate() {
+		return birthDate;
+	}
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public Set<InvoiceDto> getInvoice() {
+		return invoice;
+	}
+	public void setInvoice(Set<InvoiceDto> invoice) {
+		this.invoice = invoice;
+	}
+	public RoleDto getRole() {
+		return role;
+	}
+	public void setRole(RoleDto role) {
+		this.role = role;
 	}
 }

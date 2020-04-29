@@ -1,16 +1,26 @@
-package com.school.administration.app.ui.model.request;
+package com.school.administration.app.ui.model.response;
 
-public class UserRequestModel {
+public class UserResponse {
 	
+	private String userId;
 	private String fullName;
 	private String username;
 	private String email;
-	private String password;
+	private RoleResponse role;
 	private String gender;
 	private String birthPlace;
 	private String birthDate;
 	private String phoneNumber;
+	private Boolean isActive;
+	private String createdDate;
+	private  AddressResponse address;
 	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -23,17 +33,23 @@ public class UserRequestModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	public String getFullName() {
 		return fullName;
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	public Boolean getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+	public String getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 	public String getGender() {
 		return gender;
@@ -58,5 +74,17 @@ public class UserRequestModel {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	public RoleResponse getRole() {
+		return role;
+	}
+	public void setRole(RoleResponse role) {
+		this.role = role;
+	}
+	public AddressResponse getAddress() {
+		return address;
+	}
+	public void setAddress(AddressResponse address) {
+		this.address = address;
 	}
 }

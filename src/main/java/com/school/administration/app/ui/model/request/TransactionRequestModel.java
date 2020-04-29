@@ -1,18 +1,12 @@
 package com.school.administration.app.ui.model.request;
 
-import java.io.Serializable;
+public class TransactionRequestModel{
 
-public class TransactionDto implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4336415583102383937L;
 	private long id;
 	private String transactionId;
 	private String invoiceId;
 	private String productId;
-	private String audienceId;
+	private String userId;
 	private String amount;
 	private String info;
 	private String solvedDate;
@@ -43,11 +37,12 @@ public class TransactionDto implements Serializable{
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
-	public String getAudienceId() {
-		return audienceId;
+	
+	public String getUserId() {
+		return userId;
 	}
-	public void setAudienceId(String audienceId) {
-		this.audienceId = audienceId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getAmount() {
 		return amount;

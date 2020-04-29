@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.TableGenerator;
 
-@Entity(name = "transaction")
+@Entity(name = "user_transaction")
 public class TransactionEntity implements Serializable {
 
 	/**
@@ -34,7 +34,7 @@ public class TransactionEntity implements Serializable {
 	private String productId;
 	
 	@Column(nullable = false)
-	private String audienceId;
+	private String userId;
 	
 	@Column(nullable = false)
 	private String amount;
@@ -86,12 +86,12 @@ public class TransactionEntity implements Serializable {
 		this.productId = productId;
 	}
 
-	public String getAudienceId() {
-		return audienceId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setAudienceId(String audienceId) {
-		this.audienceId = audienceId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getAmount() {

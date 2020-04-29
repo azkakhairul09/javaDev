@@ -14,7 +14,7 @@ import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-@Entity(name = "product")
+@Entity(name = "t_product")
 @DynamicUpdate
 public class ProductsEntity implements Serializable {
 

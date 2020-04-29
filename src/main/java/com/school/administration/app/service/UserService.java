@@ -11,7 +11,7 @@ public interface UserService extends UserDetailsService {
 
 	UserDto getUser(String username);
 	List<UserDto> getUsers(int page, int limit);
-	UserDto createUser(String roleId, UserDto user);
+	UserDto createUser(UserDto user);
 	ProductsDto createProduct(ProductsDto product);
 	List<ProductsDto> getProducts(int page, int limit);
 	UserDto getUserByUserId(String userId);

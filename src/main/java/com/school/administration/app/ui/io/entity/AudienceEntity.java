@@ -1,17 +1,11 @@
 package com.school.administration.app.ui.io.entity;
 
 import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -66,13 +60,6 @@ public class AudienceEntity implements Serializable {
 	private String encryptPassword;
 	
 	private String roleId;
-	
-	@OneToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name = "address_id")
-	private AddressEntity address;
-	
-	@OneToMany(mappedBy = "audienceId", cascade = CascadeType.ALL)
-	private Set<InvoiceEntity> invoice;
 	
 	public long getId() {
 		return id;
@@ -170,13 +157,6 @@ public class AudienceEntity implements Serializable {
 		this.encryptPassword = encryptPassword;
 	}
 
-	public AddressEntity getAddress() {
-		return address;
-	}
-
-	public void setAddress(AddressEntity address) {
-		this.address = address;
-	}
 
 	public String getRoleId() {
 		return roleId;
@@ -184,13 +164,5 @@ public class AudienceEntity implements Serializable {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
-	}
-
-	public Set<InvoiceEntity> getInvoice() {
-		return invoice;
-	}
-
-	public void setInvoice(Set<InvoiceEntity> invoice) {
-		this.invoice = invoice;
 	}
 }
