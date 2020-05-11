@@ -8,6 +8,8 @@ public class UserDto {
 	private RoleDto role;
 	private String fullName;
 	private String username;
+	private String password;
+	private String encryptPassword;
 	private String email;
 	private String gender;
 	private String birthPlace;
@@ -17,9 +19,8 @@ public class UserDto {
 	private String createdDate;
 	private String modifiedBy;
 	private String modifiedDate;
-	private String password;
-	private String encryptPassword;
 	private Boolean isActive;
+	private AddressDto address;
 	
 	public long getId() {
 		return id;
@@ -38,6 +39,18 @@ public class UserDto {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getEncryptPassword() {
+		return encryptPassword;
+	}
+	public void setEncryptPassword(String encryptPassword) {
+		this.encryptPassword = encryptPassword;
 	}
 	public String getEmail() {
 		return email;
@@ -62,18 +75,6 @@ public class UserDto {
 	}
 	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getEncryptPassword() {
-		return encryptPassword;
-	}
-	public void setEncryptPassword(String encryptPassword) {
-		this.encryptPassword = encryptPassword;
 	}
 	public Boolean getIsActive() {
 		return isActive;
@@ -122,5 +123,11 @@ public class UserDto {
 	}
 	public void setRole(RoleDto role) {
 		this.role = role;
+	}
+	public AddressDto getAddress() {
+		return address;
+	}
+	public void setAddress(AddressDto address) {
+		this.address = address;
 	}
 }

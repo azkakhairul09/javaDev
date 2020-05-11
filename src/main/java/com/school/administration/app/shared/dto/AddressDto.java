@@ -1,6 +1,7 @@
 package com.school.administration.app.shared.dto;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class AddressDto implements Serializable{
 
@@ -9,7 +10,6 @@ public class AddressDto implements Serializable{
 	 */
 	private static final long serialVersionUID = -5803044762719999255L;
 	private long id;
-	private String userId;
 	private String addressId;
 	private String fullAddress;
 	private String province;
@@ -17,6 +17,7 @@ public class AddressDto implements Serializable{
 	private String district;
 	private String subDistrict;
 	private String postalCode;
+	private Set<UserDto> user;
 	
 	public long getId() {
 		return id;
@@ -66,10 +67,10 @@ public class AddressDto implements Serializable{
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-	public String getUserId() {
-		return userId;
+	public Set<UserDto> getUser() {
+		return user;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(Set<UserDto> userDto) {
+		this.user = userDto;
 	}
 }

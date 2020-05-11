@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.TableGenerator;
 
-@Entity(name="user")
+@Entity(name="t_user")
 public class UserEntity implements Serializable{
 	private static final long serialVersionUID = -4465726475061969211L;
 	
@@ -31,22 +31,25 @@ public class UserEntity implements Serializable{
 	@Column(nullable = false, length = 120)
 	private String username;
 	
-	@Column(nullable = false, length = 120)
+	@Column(nullable = false)
+	private String encryptPassword;
+	
+	@Column(nullable = true, length = 120)
 	private String fullName;
 	
 	@Column(nullable = false, length = 100)
 	private String email;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String gender;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String birthPlace;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String birthDate;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String phoneNumber;
 	
 	@Column(nullable = false)
@@ -59,9 +62,6 @@ public class UserEntity implements Serializable{
 	private String modifiedDate;
 	
 	@Column(nullable = false)
-	private String encryptPassword;
-	
-	@Column(nullable = false)
 	private Boolean isActive;
 	
 	@ManyToOne(cascade = {CascadeType.ALL})
@@ -70,6 +70,10 @@ public class UserEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
 	private Set<InvoiceEntity> invoice;
+	
+	@ManyToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name="address_id")
+	private AddressEntity address;
 
 	public long getId() {
 		return id;
@@ -93,6 +97,14 @@ public class UserEntity implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getEncryptPassword() {
+		return encryptPassword;
+	}
+
+	public void setEncryptPassword(String encryptPassword) {
+		this.encryptPassword = encryptPassword;
 	}
 
 	public String getEmail() {
@@ -127,28 +139,12 @@ public class UserEntity implements Serializable{
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getEncryptPassword() {
-		return encryptPassword;
-	}
-
-	public void setEncryptPassword(String encryptPassword) {
-		this.encryptPassword = encryptPassword;
-	}
-
 	public Boolean getIsActive() {
 		return isActive;
 	}
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
-	}
-
-	public RoleEntity getRole() {
-		return role;
-	}
-
-	public void setRole(RoleEntity role) {
-		this.role = role;
 	}
 
 	public String getFullName() {
@@ -197,5 +193,21 @@ public class UserEntity implements Serializable{
 
 	public void setInvoice(Set<InvoiceEntity> invoice) {
 		this.invoice = invoice;
+	}
+
+	public RoleEntity getRole() {
+		return role;
+	}
+
+	public void setRole(RoleEntity role) {
+		this.role = role;
+	}
+
+	public AddressEntity getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressEntity address) {
+		this.address = address;
 	}
 }

@@ -15,115 +15,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.school.administration.app.service.AudienceService;
 import com.school.administration.app.service.InvoiceService;
 import com.school.administration.app.service.UserService;
-import com.school.administration.app.shared.dto.AudienceDto;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
-import com.school.administration.app.ui.model.contentResponse.ContentAudience;
-import com.school.administration.app.ui.model.contentResponse.ContentAudiences;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoice;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoices;
 import com.school.administration.app.ui.model.contentResponse.ContentProduct;
 import com.school.administration.app.ui.model.contentResponse.ContentProducts;
 import com.school.administration.app.ui.model.contentResponse.ContentUser;
 import com.school.administration.app.ui.model.contentResponse.ContentUsers;
-import com.school.administration.app.ui.model.request.AudienceRequestModel;
 import com.school.administration.app.ui.model.request.InvoiceRequestModel;
 import com.school.administration.app.ui.model.request.ProductRequestModel;
+import com.school.administration.app.ui.model.request.UserDetailRequestModel;
 import com.school.administration.app.ui.model.request.UserRequestModel;
-import com.school.administration.app.ui.model.response.AudienceResponse;
 import com.school.administration.app.ui.model.response.InvoiceResponse;
 import com.school.administration.app.ui.model.response.UserResponse;
 import com.school.administration.app.ui.model.response.ProductResponse;
-
 
 @RestController
 public class UserController {
 
 	@Autowired
 	UserService userService;
+
 	
 	@Autowired
 	InvoiceService invoiceService;
-	
-	@Autowired
-	AudienceService audienceService;
-
-	
-	@PostMapping(
-		path = "/audience-registration",
-		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-		)
-	public ContentAudience createAudience(
-			@RequestParam String roleId,
-			@RequestBody AudienceRequestModel audience) throws Exception {
-		AudienceResponse returnValue = new AudienceResponse();
-		
-		ContentAudience result = new ContentAudience();
-		
-		ModelMapper modelMapper = new ModelMapper();
-		AudienceDto audienceDto = modelMapper.map(audience, AudienceDto.class);
-		
-		AudienceDto createdAudience = audienceService.createAudience(roleId, audienceDto);
-		returnValue = modelMapper.map(createdAudience, AudienceResponse.class);
-		
-		result.setContent(returnValue);
-		result.setErrorCode("201");
-		result.setErrorDesc("created");
-		
-		return result;
-	}
-	
-	@GetMapping(
-			path = "/get-all-audiences", 
-			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ContentAudiences getAudiences(@RequestParam(value = "page", defaultValue = "0") int page,
-								   @RequestParam(value = "limit", defaultValue = "25") int limit) {
-		List<AudienceResponse> returnValue = new ArrayList<>();
-		
-		ContentAudiences result = new ContentAudiences();
-		
-		List<AudienceDto> audiences = audienceService.getAudiences(page, limit);
-		
-		if (audiences != null && !audiences.isEmpty()) {
-			java.lang.reflect.Type listType = new TypeToken<List<AudienceResponse>>() {
-			}.getType();
-			returnValue = new ModelMapper().map(audiences, listType);
-		}
-		
-		result.setContent(returnValue);
-		result.setErrorCode("0");
-		result.setErrorDesc("success get audiences");
-		
-		return result;
-	}
-	
-	@GetMapping(path = "/get-audience", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
-	public ContentAudience getAudienceDetail(@RequestParam(value = "audienceId") String audienceId) {
-
-		AudienceResponse returnValue = new AudienceResponse();
-		
-		ContentAudience result = new ContentAudience();
-		
-		AudienceDto audienceDto = audienceService.getAudienceByAudienceId(audienceId);
-		
-		if (audienceDto != null) {
-			java.lang.reflect.Type listType = new TypeToken<AudienceResponse>() {
-			}.getType();
-			returnValue = new ModelMapper().map(audienceDto, listType);
-		}
-
-		result.setContent(returnValue);
-		result.setErrorCode("0");
-		result.setErrorDesc("success get audience");
-		
-		return result;
-	}
 	
 	@PostMapping(
 		path = "/user-registration",
@@ -136,7 +55,7 @@ public class UserController {
 		
 		ContentUser result = new ContentUser();
 		
-		if (user.getUsername().isEmpty()) throw new NullPointerException("Username may not be null");
+		if (user.getEmail().isEmpty()) throw new NullPointerException("Username may not be null");
 		if (user.getPassword().isEmpty()) throw new NullPointerException("Password may not be null");
 		
 		ModelMapper modelMapper = new ModelMapper();
@@ -199,6 +118,29 @@ public class UserController {
 		return result;
 	}
 	
+	@PutMapping(path = "/update-detail-user",
+			consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+			)
+		public ContentUser updateDetailUser(@RequestParam(value = "userId") String userId,
+				@RequestBody UserDetailRequestModel userDetail) {
+			UserResponse returnValue = new UserResponse();
+			
+			ContentUser result = new ContentUser();
+			
+			ModelMapper modelMapper = new ModelMapper();
+			UserDto userDto = modelMapper.map(userDetail, UserDto.class);
+			
+			UserDto updatedDetailUser = userService.updateDetailUser(userId, userDto);
+			returnValue = modelMapper.map(updatedDetailUser, UserResponse.class);
+			
+			result.setContent(returnValue);
+			result.setErrorCode("0");
+			result.setErrorDesc("success update detail user");
+			
+			return result;	
+		}
+	
 	@PutMapping(path = "/disactivate-user",
 		consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
 		produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
@@ -210,8 +152,8 @@ public class UserController {
 		
 		UserDto userDto = new UserDto();
 		
-		UserDto updatedUser = userService.disactiveUser(userId, userDto);
-		BeanUtils.copyProperties(updatedUser, returnValue);
+		UserDto disactivateUser = userService.disactiveUser(userId, userDto);
+		BeanUtils.copyProperties(disactivateUser, returnValue);
 		
 		result.setContent(returnValue);
 		result.setErrorCode("0");

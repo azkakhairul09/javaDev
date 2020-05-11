@@ -28,9 +28,9 @@ public class RoleEntity implements Serializable{
 	
 	@Column(nullable = false)
 	private String roleName;
-
+	
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-	private Set<UserEntity> users;
+	private Set<UserEntity> user;
 	
 	public long getId() {
 		return id;
@@ -56,11 +56,11 @@ public class RoleEntity implements Serializable{
 		this.roleName = roleName;
 	}
 
-	public Set<UserEntity> getUsers() {
-		return users;
+	public Set<UserEntity> getUser() {
+		return user;
 	}
 
-	public void setUsers(Set<UserEntity> users) {
-		this.users = users;
+	public void setUser(Set<UserEntity> user) {
+		this.user = user;
 	}
 }

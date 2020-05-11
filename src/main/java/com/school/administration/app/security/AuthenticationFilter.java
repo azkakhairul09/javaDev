@@ -17,7 +17,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.school.administration.app.SpringApplicationContext;
-import com.school.administration.app.io.repositories.RoleRepository;
 import com.school.administration.app.io.repositories.UserRepository;
 import com.school.administration.app.service.UserService;
 import com.school.administration.app.shared.dto.CredsDto;
@@ -29,9 +28,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	
-	@Autowired
-	RoleRepository roleRepository;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -78,6 +74,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		
 		res.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
 		res.addHeader("userID", userDto.getUserId());
+
 		String JWT= (SecurityConstant.TOKEN_PREFIX + token);
 		String userID = userDto.getUserId();
 		
@@ -89,86 +86,23 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		// Creating Object of ObjectMapper define in Jakson Api 
         ObjectMapper Obj = new ObjectMapper(); 
   
-        try { 
+        try 
+        { 
             // set object as a json string 
             String response = Obj.writeValueAsString(creds);
-                        
+                     
             res.setStatus(HttpServletResponse.SC_OK);
     		res.setContentType("application/json");
     		res.getWriter().println(response);
     		res.getWriter().flush();
     		res.getWriter().close();
     		
-    		System.out.println(response);
+//    		System.out.println(response);
         } 
-  
-        catch (IOException e) { 
+        catch (IOException e) 
+        { 
             e.printStackTrace(); 
-        }
-        
-//		if (userDto.getIsActive() != false) {
-//			
-//			if (userID != null) {
-//				
-//				if (roleName.equals("Admin")) {
-//				
-//					CredsDto creds = new CredsDto();
-//					creds.setToken(JWT);
-//					creds.setUserId(userID);
-//					creds.setUsername(username);
-//					creds.setRole(roleName);
-//					
-//					// Creating Object of ObjectMapper define in Jakson Api 
-//			        ObjectMapper Obj = new ObjectMapper(); 
-//			  
-//			        try { 
-//			            // set object as a json string 
-//			            String response = Obj.writeValueAsString(creds);
-//			                        
-//			            res.setStatus(HttpServletResponse.SC_OK);
-//			    		res.setContentType("application/json");
-//			    		res.getWriter().println(response);
-//			    		res.getWriter().flush();
-//			    		res.getWriter().close();
-//			    		
-//			    		System.out.println(response);
-//			        } 
-//			  
-//			        catch (IOException e) { 
-//			            e.printStackTrace(); 
-//			        } 		
-//			        
-//				} else if (roleName.equals("Finance")) {
-//					
-//					CredsDto creds = new CredsDto();
-//					creds.setToken(JWT);
-//					creds.setUserId(userID);
-//					creds.setUsername(username);
-//					creds.setRole(roleName);
-//					
-//					// Creating Object of ObjectMapper define in Jakson Api 
-//			        ObjectMapper Obj = new ObjectMapper(); 
-//			  
-//			        try { 
-//			            // set object as a json string 
-//			            String response = Obj.writeValueAsString(creds);
-//			                        
-//			            res.setStatus(HttpServletResponse.SC_OK);
-//			    		res.setContentType("application/json");
-//			    		res.getWriter().println(response);
-//			    		res.getWriter().flush();
-//			    		res.getWriter().close();
-//			        } 
-//			  
-//			        catch (IOException e) { 
-//			            e.printStackTrace(); 
-//			        } 		
-//				}
-//			}
-//			
-//		}
-		
-		
+        }       
 	}
 
 }

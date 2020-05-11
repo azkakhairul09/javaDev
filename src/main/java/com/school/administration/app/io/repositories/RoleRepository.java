@@ -7,6 +7,7 @@ import com.school.administration.app.ui.io.entity.RoleEntity;
 
 @Repository
 public interface RoleRepository extends PagingAndSortingRepository<RoleEntity, Long> {
+	RoleEntity findRoleByRoleId(String roleId);
 	RoleEntity findRoleIdByRoleId(String roleId);
-	RoleEntity findRoleById(String Id);
 }
+

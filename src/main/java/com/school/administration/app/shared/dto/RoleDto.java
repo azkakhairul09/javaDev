@@ -1,10 +1,13 @@
 package com.school.administration.app.shared.dto;
 
+import java.util.Set;
+
 public class RoleDto{
 	private long id;
 	private String roleId;
 	private String roleName;
-	private UserDto users;
+	private Set<UserDto> user;
+	
 	public long getId() {
 		return id;
 	}
@@ -23,10 +26,10 @@ public class RoleDto{
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	public UserDto getUsers() {
-		return users;
+	public Set<UserDto> getUser() {
+		return user;
 	}
-	public void setUsers(UserDto users) {
-		this.users = users;
+	public void setUser(Set<UserDto> user) {
+		this.user = user;
 	}
 }

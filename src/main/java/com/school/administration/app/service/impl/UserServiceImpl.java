@@ -22,19 +22,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.school.administration.app.ui.io.entity.AddressEntity;
 import com.school.administration.app.ui.io.entity.ProductsEntity;
 import com.school.administration.app.ui.io.entity.RoleEntity;
 import com.school.administration.app.ui.io.entity.UserEntity;
-import com.school.administration.app.ui.io.entity.UserRoleEntity;
 import com.school.administration.app.ScheduledTasks;
 import com.school.administration.app.exceptions.UserServiceException;
 import com.school.administration.app.io.repositories.AddressRepositories;
 import com.school.administration.app.io.repositories.ProductsRepository;
 import com.school.administration.app.io.repositories.RoleRepository;
 import com.school.administration.app.io.repositories.UserRepository;
-import com.school.administration.app.io.repositories.UserRoleRepositories;
 import com.school.administration.app.shared.Utils;
 import com.school.administration.app.service.UserService;
+import com.school.administration.app.shared.dto.AddressDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
 
@@ -57,9 +57,6 @@ public class UserServiceImpl implements UserService {
 	AddressRepositories addressRepository;
 	
 	@Autowired
-	UserRoleRepositories userRoleRepository;
-	
-	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
@@ -69,11 +66,10 @@ public class UserServiceImpl implements UserService {
 	Utils utils;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
+	public UserDetails loadUserByUsername(String username) {
 		UserEntity userEntity = userRepository.findByUsername(username);
 		
-		if (userEntity == null) throw new UsernameNotFoundException(username+ " not found");
+		if (userEntity == null) throw new UsernameNotFoundException(username);
 		
 		return new User(userEntity.getUsername(), userEntity.getEncryptPassword(), 
 				userEntity.getIsActive(),
@@ -98,38 +94,29 @@ public class UserServiceImpl implements UserService {
 	public UserDto createUser(UserDto user) {
 		// TODO Auto-generated method stub
 		//validation
-//		if (userRepository.findByUsername(user.getUsername()) != null 
-//			|| userRepository.findByEmail(user.getEmail()) != null 
-//			|| userRepository.findByFullName(user.getFullName()) != null)
-//		throw new UserServiceException("user is duplicate entry");
+		if (userRepository.findByUsername(user.getUsername()) != null 
+			|| userRepository.findByEmail(user.getEmail()) != null)
+		throw new UserServiceException("user is duplicate entry");
 		
-		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+		final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
 		Calendar currentTime = Calendar.getInstance();
-		 
+		
 		String timeStr = formatter.format(currentTime.getTime());
 		
 		ModelMapper modelMapper = new ModelMapper();
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
-//		BeanUtils.copyProperties(user, userEntity);
 		
-		RoleEntity roleEntity = roleRepository.findRoleIdByRoleId("2");
+		RoleEntity roleEntity = roleRepository.findRoleByRoleId("2");
 		
 		String publicUserId = utils.generateUserId(9);
 		userEntity.setEncryptPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		userEntity.setUserId(publicUserId);
 		userEntity.setIsActive(true);
-		userEntity.setRole(roleEntity);
 		userEntity.setCreatedDate(timeStr);
-		
-		UserRoleEntity userRoleEntity = new UserRoleEntity();
-		
-		userRoleEntity.setUserId(publicUserId);
-		userRoleEntity.setRoleId("2");
-		
-		userRoleRepository.save(userRoleEntity);
+		userEntity.setRole(roleEntity);
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
@@ -161,6 +148,85 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDto updateDetailUser(String userId, UserDto userDto) {
+		// TODO Auto-generated method stub
+		UserDto returnValue = new UserDto();
+		UserEntity userEntity = userRepository.findUserByUserId(userId);
+		
+		if (userEntity == null) throw new UserServiceException("user not found");
+		if (userEntity.getIsActive() == false) throw new UserServiceException("user is not active");
+		
+		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		 
+		Calendar currentTime = Calendar.getInstance();
+		 
+		String timeStr = formatter.format(currentTime.getTime());
+		
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+		
+		AddressDto address = userDto.getAddress();
+		if (address == null) throw new UserServiceException("address not found");
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		if (userEntity.getAddress() != null) 
+		{
+			String addressId = userEntity.getAddress().getAddressId();
+			AddressEntity addressEntity = addressRepository.findByAddressId(addressId);
+			
+//			addressEntity.setFullAddress(address.getFullAddress());
+//			addressEntity.setCity(address.getCity());
+//			addressEntity.setDistrict(address.getDistrict());
+//			addressEntity.setProvince(address.getProvince());
+//			addressEntity.setPostalCode(address.getPostalCode());
+//			addressEntity.setSubDistrict(address.getSubDistrict());
+			
+			addressRepository.save(addressEntity);
+			
+			System.out.println(addressEntity.getAddressId());
+			
+			userEntity.setFullName(userDto.getFullName());
+			userEntity.setGender(userDto.getGender());
+			userEntity.setBirthPlace(userDto.getBirthPlace());
+			userEntity.setBirthDate(userDto.getBirthDate());
+			userEntity.setPhoneNumber(userDto.getPhoneNumber());
+			userEntity.setModifiedDate(timeStr);
+			userEntity.setModifiedBy(authentication.getName());
+			
+			UserEntity updateDetailUser = userRepository.save(userEntity);
+			
+			returnValue = modelMapper.map(updateDetailUser, UserDto.class);
+		}		
+		else if (userEntity.getAddress() == null) 
+		{
+			address.setAddressId(utils.generateAddressId(5));
+			
+			AddressEntity addressEntity = modelMapper.map(address, AddressEntity.class);
+			userEntity.setAddress(addressEntity);
+			addressRepository.save(addressEntity);
+			
+			System.out.println(addressEntity.getAddressId());
+			
+			userEntity.setFullName(userDto.getFullName());
+			userEntity.setGender(userDto.getGender());
+			userEntity.setBirthPlace(userDto.getBirthPlace());
+			userEntity.setBirthDate(userDto.getBirthDate());
+			userEntity.setPhoneNumber(userDto.getPhoneNumber());
+			userEntity.setModifiedDate(timeStr);
+			userEntity.setModifiedBy(authentication.getName());
+			
+			UserEntity updateDetailUser = userRepository.save(userEntity);
+			
+			returnValue = modelMapper.map(updateDetailUser, UserDto.class);
+		}
+		
+		return returnValue;
+	}
+	
+	@Override
 	public UserDto disactiveUser(String userId, UserDto userDto) {
 		// TODO Auto-generated method stub
 		UserDto returnValue = new UserDto();
@@ -189,7 +255,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(disactiveUser, returnValue);
 		
 		return returnValue;
-	}
+	} 
 
 	@Override
 	public ProductsDto createProduct(ProductsDto product) {

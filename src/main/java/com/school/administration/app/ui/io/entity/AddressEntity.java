@@ -1,13 +1,17 @@
 package com.school.administration.app.ui.io.entity;
 
 import java.io.Serializable;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.TableGenerator;
 
-@Entity(name="user_address")
+@Entity(name="t_user_address")
 public class AddressEntity implements Serializable {
 
 	/**
@@ -16,13 +20,11 @@ public class AddressEntity implements Serializable {
 	private static final long serialVersionUID = -1227177082633578253L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE, generator="audienceAddress")
-	@TableGenerator(name="audienceAddress", table="sequence_id",
+	@GeneratedValue(strategy=GenerationType.TABLE, generator="t_user_address")
+	@TableGenerator(name="t_user_address", table="sequence_id",
 			pkColumnName="sequence_name", pkColumnValue="addressID",
 			valueColumnName="sequence_value", allocationSize =1, initialValue=0)
 	private long id;
-	
-	private String userId;
 	
 	private String addressId;
 	
@@ -37,6 +39,9 @@ public class AddressEntity implements Serializable {
 	private String subDistrict;
 	
 	private String postalCode;
+	
+	@OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+	private Set<UserEntity> user;
 
 	public long getId() {
 		return id;
@@ -101,12 +106,12 @@ public class AddressEntity implements Serializable {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-	
-	public String getUserId() {
-		return userId;
+
+	public Set<UserEntity> getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(Set<UserEntity> user) {
+		this.user = user;
 	}
 }

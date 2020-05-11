@@ -13,7 +13,7 @@ public class UserResponse {
 	private String phoneNumber;
 	private Boolean isActive;
 	private String createdDate;
-	private  AddressResponse address;
+	private AddressResponse address;
 	
 	public String getUserId() {
 		return userId;

@@ -10,7 +10,6 @@ public class CredsDto implements Serializable{
 	private static final long serialVersionUID = 2938118245049559568L;
 	private String token;
 	private String userId;
-	private String roleId;
 	private String username;
 	
 	public String getToken() {
@@ -24,12 +23,6 @@ public class CredsDto implements Serializable{
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 	public String getUsername() {
 		return username;

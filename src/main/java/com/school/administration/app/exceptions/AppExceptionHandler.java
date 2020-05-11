@@ -70,6 +70,17 @@ public class AppExceptionHandler {
 			
 			return new ResponseEntity<>(errorMessage, oke);	
 		}
+		else if (queryString.equals("/school_administration/update-detail-user")) 
+		{
+			String errorCode = "err41";
+			String status = "failed";
+			HttpStatus oke = HttpStatus.valueOf(200);
+			Date date = Calendar.getInstance().getTime();
+			
+			ErrorMessage errorMessage = new ErrorMessage(errorCode, status, ex.getLocalizedMessage(), date);
+			
+			return new ResponseEntity<>(errorMessage, oke);	
+		}
 		else if (queryString.equals("/school_administration/get-all-products") && queryString.equals("/school_administration/get-product")) 
 		{
 			String errorCode = "err91";
