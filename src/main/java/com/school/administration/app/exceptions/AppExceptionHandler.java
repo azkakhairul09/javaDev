@@ -37,7 +37,18 @@ public class AppExceptionHandler {
  
         }
 		
-		if (queryString.equals("/school_administration/get-user") && queryString.equals("/school_administration/get-all-users")) 
+        if (queryString.equals("/school_administration/login")) 
+		{
+			String errorCode = "err403";
+			String status = "failed to login";
+			HttpStatus oke = HttpStatus.valueOf(200);
+			Date date = Calendar.getInstance().getTime();
+			
+			ErrorMessage errorMessage = new ErrorMessage(errorCode, status, ex.getLocalizedMessage(), date);
+			
+			return new ResponseEntity<>(errorMessage, oke);
+		}
+        else if (queryString.equals("/school_administration/get-user") && queryString.equals("/school_administration/get-all-users")) 
 		{	
 			String errorCode = "err91";
 			String status = "failed get user";

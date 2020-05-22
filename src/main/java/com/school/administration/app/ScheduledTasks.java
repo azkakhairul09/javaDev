@@ -36,7 +36,7 @@ public class ScheduledTasks {
 	public ProductsDto updateExpiredProduct() {
     	ProductsDto returnValue = new ProductsDto();
     	
-    	final String DATE_FORMAT = "dd-MM-yyyy";
+    	final String DATE_FORMAT = "dd.MM.yyyy";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -63,6 +63,37 @@ public class ScheduledTasks {
 		return returnValue;
 	}
     
+    @Scheduled(cron = "0 0 6 * * *")
+	public InvoiceDto checkExpiredInvoice() {
+    	InvoiceDto returnValue = new InvoiceDto();
+    	
+    	final String DATE_FORMAT = "dd.MM.yyyy";
+		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		 
+		Calendar currentTime = Calendar.getInstance();
+		 
+		String date = formatter.format(currentTime.getTime());
+		
+		List<InvoiceEntity> invoiceEntity = new ArrayList<InvoiceEntity>();
+		invoiceEntity = invoiceRepository.findInvoiceByCreatedDate(date);
+		
+		for (InvoiceEntity invoice : invoiceEntity)
+		{
+			if (invoice.getIsExpired() == false) 
+			{
+				invoice.setIsExpired(true);
+				InvoiceEntity updateInvoice = invoiceRepository.save(invoice);
+				
+				BeanUtils.copyProperties(updateInvoice, returnValue);
+			}
+		}
+		
+    	logger.info(dateFormat.format(new Date()));
+    	
+		return returnValue;
+	}
+    
     
     @Scheduled(cron = "*/1 * * * * *")
     public InvoiceDto updateInvoice() {
@@ -71,7 +102,7 @@ public class ScheduledTasks {
     	Calendar calendar = Calendar.getInstance();
     	calendar.add(Calendar.HOUR_OF_DAY, -1);
     	Date date = calendar.getTime();
-    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
     	String newStopTime = sdfStopTime.format(date);
     	
 		List<InvoiceEntity> invoiceEntity = new ArrayList<InvoiceEntity>();
@@ -89,7 +120,6 @@ public class ScheduledTasks {
 			}
 		}
 		
-    	return returnValue;
-    	
+    	return returnValue;	
     }
 }

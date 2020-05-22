@@ -2,10 +2,11 @@ package com.school.administration.app.ui.model.response;
 
 public class InvoiceResponse {
 	private String invoiceId;
+	private Boolean isExpired;
+	private Boolean isPayment;
 	private String invoiceName;
 	private String nominal;
 	private String productName;
-	private String username;
 	private String invoiceDate;
 	private String qrContent;
 	public String getInvoiceId() {
@@ -44,10 +45,16 @@ public class InvoiceResponse {
 	public void setQrContent(String qrContent) {
 		this.qrContent = qrContent;
 	}
-	public String getUsername() {
-		return username;
+	public Boolean getIsExpired() {
+		return isExpired;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setIsExpired(Boolean isExpired) {
+		this.isExpired = isExpired;
+	}
+	public Boolean getIsPayment() {
+		return isPayment;
+	}
+	public void setIsPayment(Boolean isPayment) {
+		this.isPayment = isPayment;
 	}
 }

@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.administration.app.service.AddressService;
 import com.school.administration.app.service.InvoiceService;
 import com.school.administration.app.service.UserService;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
+
 import com.school.administration.app.ui.model.contentResponse.ContentInvoice;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoices;
 import com.school.administration.app.ui.model.contentResponse.ContentProduct;
@@ -39,8 +41,10 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-
 	
+	@Autowired
+	AddressService addressService;
+
 	@Autowired
 	InvoiceService invoiceService;
 	
@@ -298,27 +302,4 @@ public class UserController {
 		
 		return result;
 	}
-//	
-//	@GetMapping(path = "/get-address", produces = { MediaType.APPLICATION_XML_VALUE,
-//			MediaType.APPLICATION_JSON_VALUE })
-//	public ContentAddress getAddress(@RequestParam(value = "userId") String userId) {
-//
-//		AddressResponse returnValue = new AddressResponse();
-//		
-//		ContentAddress result = new ContentAddress();
-//		
-//		AddressDto addressDto = addressService.getAddressByAudienceId(userId);
-//		
-//		if (addressDto != null) {
-//			java.lang.reflect.Type listType = new TypeToken<AddressResponse>() {
-//			}.getType();
-//			returnValue = new ModelMapper().map(addressDto, listType);
-//		}
-//
-//		result.setContent(returnValue);
-//		result.setErrorCode("0");
-//		result.setErrorDesc("success get address");
-//		
-//		return result;
-//	}
 }

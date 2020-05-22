@@ -44,6 +44,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			LoginRequestModel creds = new ObjectMapper()
 					.readValue(req.getInputStream(), LoginRequestModel.class);
+			
 			return authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(
 							creds.getUsername(),
@@ -77,11 +78,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 		String JWT= (SecurityConstant.TOKEN_PREFIX + token);
 		String userID = userDto.getUserId();
+		String fullname = userDto.getFullName();
 		
 		CredsDto creds = new CredsDto();
 		creds.setToken(JWT);
 		creds.setUserId(userID);
 		creds.setUsername(username);
+		creds.setFullname(fullname);
 		
 		// Creating Object of ObjectMapper define in Jakson Api 
         ObjectMapper Obj = new ObjectMapper(); 

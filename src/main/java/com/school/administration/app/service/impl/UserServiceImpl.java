@@ -69,7 +69,9 @@ public class UserServiceImpl implements UserService {
 	public UserDetails loadUserByUsername(String username) {
 		UserEntity userEntity = userRepository.findByUsername(username);
 		
-		if (userEntity == null) throw new UsernameNotFoundException(username);
+		if (userEntity == null) throw new UsernameNotFoundException("user not found");
+		
+		if (userEntity.getIsActive().equals(false)) throw new UserServiceException("user is not active");
 		
 		return new User(userEntity.getUsername(), userEntity.getEncryptPassword(), 
 				userEntity.getIsActive(),
@@ -94,9 +96,11 @@ public class UserServiceImpl implements UserService {
 	public UserDto createUser(UserDto user) {
 		// TODO Auto-generated method stub
 		//validation
-		if (userRepository.findByUsername(user.getUsername()) != null 
-			|| userRepository.findByEmail(user.getEmail()) != null)
-		throw new UserServiceException("user is duplicate entry");
+		if (userRepository.findByUsername(user.getUsername()) != null )
+		throw new UserServiceException("username is duplicate entry");
+		
+		if (userRepository.findByEmail(user.getEmail()) != null)
+			throw new UserServiceException("email is duplicate entry");
 		
 		final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
@@ -186,8 +190,6 @@ public class UserServiceImpl implements UserService {
 			
 			addressRepository.save(addressEntity);
 			
-			System.out.println(addressEntity.getAddressId());
-			
 			userEntity.setFullName(userDto.getFullName());
 			userEntity.setGender(userDto.getGender());
 			userEntity.setBirthPlace(userDto.getBirthPlace());
@@ -207,8 +209,6 @@ public class UserServiceImpl implements UserService {
 			AddressEntity addressEntity = modelMapper.map(address, AddressEntity.class);
 			userEntity.setAddress(addressEntity);
 			addressRepository.save(addressEntity);
-			
-			System.out.println(addressEntity.getAddressId());
 			
 			userEntity.setFullName(userDto.getFullName());
 			userEntity.setGender(userDto.getGender());
@@ -265,7 +265,7 @@ public class UserServiceImpl implements UserService {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 		
-		final String DATE_FORMAT = "dd-MM-yyyy";
+		final String DATE_FORMAT = "dd.MM.yyyy";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService {
 		 
 		String timeStr = formatter.format(currentTime.getTime());
 		
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 
 		Date d1 = null;
 		Date d2 = null;
@@ -374,4 +374,5 @@ public class UserServiceImpl implements UserService {
 		returnValue = modelMapper.map(productEntity, ProductsDto.class);
 		return returnValue;
 	}
+
 }

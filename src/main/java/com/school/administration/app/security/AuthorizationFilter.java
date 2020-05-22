@@ -48,6 +48,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                     .setSigningKey( SecurityConstant.getTokenSecret())
                     .parseClaimsJws( token )
                     .getBody()
+//                    .setExpiration(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
                     .getSubject();
             
             if (user != null) {

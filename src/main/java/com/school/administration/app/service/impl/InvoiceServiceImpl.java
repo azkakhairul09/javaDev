@@ -82,7 +82,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		invoiceEntity.setInfo(invoiceEntity.getInvoiceName());
 		
 		
-		System.out.println(request.getHeader("Authorization"));
+//		System.out.println(request.getHeader("Authorization"));
 		try {		
 			
 			QrenInvoiceDto qrenInvoiceDto = new QrenInvoiceDto();
@@ -116,7 +116,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 			InputStream in = new BufferedInputStream(connection.getInputStream());
 			String result = IOUtils.toString(in, "UTF-8");
 			
-			System.out.println(result);
+//			System.out.println(result);
 			
 			JSONObject qrenResponse = new JSONObject(result);
 			invoiceEntity.setInvoiceId(qrenResponse.getString("invoiceId"));
@@ -130,7 +130,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 			System.out.println(e);
 		}
 		
-		final String DATE_FORMAT = "dd-MM-yyyy";
+		final String DATE_FORMAT = "dd.MM.yyyy";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -144,7 +144,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		
 		invoiceEntity.setCreatedBy(authentication.getName());
 		
-		final String CREATED_DATE = "dd-MM-yyyy HH:mm:ss";
+		final String CREATED_DATE = "dd.MM.yyyy HH:mm:ss";
 		SimpleDateFormat format = new SimpleDateFormat(CREATED_DATE);
 		format.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		
