@@ -1,15 +1,17 @@
 package com.school.administration.app.security;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import com.school.administration.app.io.repositories.UserRepository;
 import com.school.administration.app.service.UserService;
 import com.school.administration.app.shared.dto.CredsDto;
 import com.school.administration.app.shared.dto.UserDto;
+import com.school.administration.app.ui.io.entity.UserEntity;
 import com.school.administration.app.ui.model.request.LoginRequestModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,9 +31,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	
-	@Autowired
-	UserRepository userRepository;
 	
 	private final AuthenticationManager authenticationManager;
 	
@@ -71,18 +71,38 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		
 		UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
 		
+		UserRepository userRepository = (UserRepository) SpringApplicationContext.getBean("userRepository");
+
 		UserDto userDto = userService.getUser(username);
 		
 		res.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
 		res.addHeader("userID", userDto.getUserId());
 
+		UserEntity userRole = userRepository.findRoleByUserId(userDto.getUserId());
+		
+//		System.out.println(userRole.getRole().getRoleName());
 		String JWT= (SecurityConstant.TOKEN_PREFIX + token);
 		String userID = userDto.getUserId();
 		String fullname = userDto.getFullName();
+		String role = userRole.getRole().getRoleName();
+		
+		UserEntity userEntity = userRepository.findTokenByUserId(userID);
+
+		final String CREATED_DATE = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat format = new SimpleDateFormat(CREATED_DATE);
+		format.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		
+		Calendar createdTime = Calendar.getInstance();
+		
+		String loginTime = format.format(createdTime.getTime());
+		userEntity.setLoginTime(loginTime);
+		userEntity.setToken(JWT);
+		userRepository.save(userEntity);
 		
 		CredsDto creds = new CredsDto();
 		creds.setToken(JWT);
 		creds.setUserId(userID);
+		creds.setRole(role);
 		creds.setUsername(username);
 		creds.setFullname(fullname);
 		

@@ -1,13 +1,25 @@
 package com.school.administration.app.ui.controller;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,13 +27,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.school.administration.app.SpringApplicationContext;
+import com.school.administration.app.io.repositories.UserRepository;
+import com.school.administration.app.security.SecurityConstant;
 import com.school.administration.app.service.AddressService;
 import com.school.administration.app.service.InvoiceService;
 import com.school.administration.app.service.UserService;
+import com.school.administration.app.shared.dto.HistoryDto;
 import com.school.administration.app.shared.dto.InvoiceDto;
 import com.school.administration.app.shared.dto.ProductsDto;
 import com.school.administration.app.shared.dto.UserDto;
-
+import com.school.administration.app.ui.io.entity.UserEntity;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoice;
 import com.school.administration.app.ui.model.contentResponse.ContentInvoices;
 import com.school.administration.app.ui.model.contentResponse.ContentProduct;
@@ -34,6 +51,7 @@ import com.school.administration.app.ui.model.request.UserDetailRequestModel;
 import com.school.administration.app.ui.model.request.UserRequestModel;
 import com.school.administration.app.ui.model.response.InvoiceResponse;
 import com.school.administration.app.ui.model.response.UserResponse;
+
 import com.school.administration.app.ui.model.response.ProductResponse;
 
 @RestController
@@ -301,5 +319,185 @@ public class UserController {
 		result.setErrorDesc("success get invoice");
 		
 		return result;
+	}
+	
+	@GetMapping(path = "/get-content", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public ContentInvoice getContent(@RequestParam(value = "invoiceId") String invoiceId) {
+
+		InvoiceResponse returnValue = new InvoiceResponse();
+		
+		ContentInvoice result = new ContentInvoice();
+		
+		InvoiceDto invoiceDto = invoiceService.getContentByInvoiceId(invoiceId);
+		
+		if (invoiceDto != null) {
+			java.lang.reflect.Type listType = new TypeToken<InvoiceResponse>() {
+			}.getType();
+			returnValue = new ModelMapper().map(invoiceDto, listType);
+		}
+
+		result.setContent(returnValue);
+		result.setErrorCode("0");
+		result.setErrorDesc("success get content");
+		
+		return result;
+	}
+	
+	@GetMapping(path = "/get-transaction-history", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public void getTransactionHistory(HttpServletResponse res) 
+			throws IOException, ServletException{
+		try 
+		{
+			HistoryDto history = new HistoryDto();
+			history.setIdTmoney("195281683222");
+			history.setIdFusion("+6219564077581");
+			history.setToken("aeff96eed2305248be46cc2661416ef9497258dfec7849a4eeffcca4d4e53a420ab60dbddf76fe70");
+			history.setStartDate("2018-12-01 00:00:00");
+			history.setStopDate("2020-12-01 23:59:59");
+			history.setTransactionType("ALL_TRANSACTION");
+			history.setMerchantId(32289);
+			history.setPage(1);
+			history.setMax(1000);
+			
+			ObjectMapper obj = new ObjectMapper();
+			
+			String url = "http://tmoney-qren-backend-tmoney-qren-prod.vsan-apps.playcourt.id/paybyqr/history-transaction";
+			
+			String json = obj.writeValueAsString(history);
+			
+			URL uri = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection) uri.openConnection();
+			
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Authorization", 
+					"Basic dG1vbmV5OmZmODY2ZjViNjE1NGJiYjdkOTc4ZTUyNDNiNDkzMjBiMGQxYWQ2N2M=");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			
+			OutputStream os = connection.getOutputStream();
+			os.write(json.getBytes("UTF-8"));
+			os.close();
+			
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			String result = IOUtils.toString(in, "UTF-8");
+			
+//			System.out.println(result);
+			
+			JSONObject response = new JSONObject(result);
+			
+			res.setStatus(HttpServletResponse.SC_OK);
+    		res.setContentType("application/json");
+    		res.getWriter().println(response);
+    		res.getWriter().flush();
+    		res.getWriter().close();
+//			System.out.println(response);
+			
+			in.close();
+			
+			connection.disconnect();
+		}
+		catch (Exception e)
+		{
+			System.err.println(e);
+		}
+	}
+	
+	@GetMapping(path = "/isTokenExpired", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public void isTokenExpired(Authentication authentication, HttpServletRequest request, HttpServletResponse res) 
+			throws IOException, ServletException{
+		
+		UserRepository userRepository = (UserRepository) SpringApplicationContext.getBean("userRepository");
+		String token = request.getHeader(SecurityConstant.HEADER_STRING);
+		
+//		System.out.println(token);		
+        
+        if (token != null) {
+        	String currentUser = authentication.getPrincipal().toString();
+            UserEntity userEntity = userRepository.findTokenByUsername(currentUser);
+        	String token_DB = userEntity.getToken();
+        	
+            if (token.equals(token_DB)) {
+            	JSONObject response = new JSONObject("{status_token: token active}");
+//            	System.out.println(response);
+        		res.setStatus(HttpServletResponse.SC_OK);
+        		res.setContentType("application/json");
+        		res.getWriter().println(response);
+        		res.getWriter().flush();
+        		res.getWriter().close();
+			} else if (!token.equals(token_DB)){
+				JSONObject response = new JSONObject("{status_token: token active, status_login: forbidden}");
+//				System.out.println(response);
+	    		res.setStatus(HttpServletResponse.SC_OK);
+	    		res.setContentType("application/json");
+	    		res.getWriter().println(response);
+	    		res.getWriter().flush();
+	    		res.getWriter().close();
+			}
+        }		
+	}
+	
+	@GetMapping(path = "/get-qr-transaction", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE })
+	public void getQrTransaction(HttpServletResponse res) 
+			throws IOException, ServletException{
+		try 
+		{
+			HistoryDto history = new HistoryDto();
+			history.setIdTmoney("195281683222");
+			history.setIdFusion("+6219564077581");
+			history.setToken("aeff96eed2305248be46cc2661416ef9497258dfec7849a4eeffcca4d4e53a420ab60dbddf76fe70");
+			history.setStartDate("2018-12-01 00:00:00");
+			history.setStopDate("2020-12-01 23:59:59");
+			history.setTransactionType("QR_PAYMENT");
+			history.setMerchantId(32289);
+			history.setPage(1);
+			history.setMax(1000);
+			
+			ObjectMapper obj = new ObjectMapper();
+			
+			String url = "http://tmoney-qren-backend-tmoney-qren-prod.vsan-apps.playcourt.id/paybyqr/history-transaction";
+			
+			String json = obj.writeValueAsString(history);
+			
+			URL uri = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection) uri.openConnection();
+			
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Authorization", 
+					"Basic dG1vbmV5OmZmODY2ZjViNjE1NGJiYjdkOTc4ZTUyNDNiNDkzMjBiMGQxYWQ2N2M=");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			
+			OutputStream os = connection.getOutputStream();
+			os.write(json.getBytes("UTF-8"));
+			os.close();
+			
+			InputStream in = new BufferedInputStream(connection.getInputStream());
+			String result = IOUtils.toString(in, "UTF-8");
+			
+//			System.out.println(result);
+			
+			JSONObject response = new JSONObject(result);
+			
+			res.setStatus(HttpServletResponse.SC_OK);
+    		res.setContentType("application/json");
+    		res.getWriter().println(response);
+    		res.getWriter().flush();
+    		res.getWriter().close();
+//			System.out.println(response);
+			
+			in.close();
+			
+			connection.disconnect();
+		}
+		catch (Exception e)
+		{
+			System.err.println(e);
+		}
 	}
 }

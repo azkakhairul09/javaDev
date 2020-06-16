@@ -1,6 +1,4 @@
 package com.school.administration.app.ui.io.entity;
-
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,12 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity(name = "t_product")
 @DynamicUpdate
-public class ProductsEntity implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5659161228110714412L;
+public class ProductsEntity implements Comparable<ProductsEntity> {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.TABLE, generator="products")
@@ -44,6 +37,9 @@ public class ProductsEntity implements Serializable {
 	
 	@Column(nullable = false)
 	private String expiredDate;
+	
+	@Column
+	private String description;
 	
 	@Column(nullable = false)
 	private String createdBy;
@@ -157,5 +153,19 @@ public class ProductsEntity implements Serializable {
 
 	public void setInvoice(Set<InvoiceEntity> invoice) {
 		this.invoice = invoice;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public int compareTo(ProductsEntity o) {
+		// TODO Auto-generated method stub
+		return getCreatedDate().compareTo(o.getCreatedDate());
 	}
 }

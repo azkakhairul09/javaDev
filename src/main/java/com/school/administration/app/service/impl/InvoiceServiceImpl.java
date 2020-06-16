@@ -127,10 +127,10 @@ public class InvoiceServiceImpl implements InvoiceService{
 			connection.disconnect();
 		
 		} catch (Exception e) {
-			System.out.println(e);
+//			System.out.println(e);
 		}
 		
-		final String DATE_FORMAT = "dd.MM.yyyy";
+		final String DATE_FORMAT = "yyyy-MM-dd";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -144,7 +144,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 		
 		invoiceEntity.setCreatedBy(authentication.getName());
 		
-		final String CREATED_DATE = "dd.MM.yyyy HH:mm:ss";
+		final String CREATED_DATE = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat format = new SimpleDateFormat(CREATED_DATE);
 		format.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		
@@ -206,5 +206,21 @@ public class InvoiceServiceImpl implements InvoiceService{
 		
 		return returnValue;
 	}
-
+	
+	@Override
+	public InvoiceDto getContentByInvoiceId(String invoiceId) {
+		// TODO Auto-generated method stub
+		InvoiceDto returnValue = new InvoiceDto();
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		InvoiceEntity invoiceEntity = invoiceRepository.findContentByInvoiceId(invoiceId);
+		
+		if (invoiceEntity == null) throw new UserServiceException(
+				"invoice not found");
+		
+		returnValue = modelMapper.map(invoiceEntity, InvoiceDto.class);
+		
+		return returnValue;
+	}
 }

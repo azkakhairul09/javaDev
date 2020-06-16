@@ -84,7 +84,7 @@ public class AppExceptionHandler {
 		else if (queryString.equals("/school_administration/update-detail-user")) 
 		{
 			String errorCode = "err41";
-			String status = "failed";
+			String status = "failed update user";
 			HttpStatus oke = HttpStatus.valueOf(200);
 			Date date = Calendar.getInstance().getTime();
 			

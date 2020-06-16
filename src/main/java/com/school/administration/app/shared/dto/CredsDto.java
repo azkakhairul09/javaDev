@@ -12,6 +12,7 @@ public class CredsDto implements Serializable{
 	private String userId;
 	private String username;
 	private String fullname;
+	private String role;
 	
 	public String getToken() {
 		return token;
@@ -36,5 +37,11 @@ public class CredsDto implements Serializable{
 	}
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

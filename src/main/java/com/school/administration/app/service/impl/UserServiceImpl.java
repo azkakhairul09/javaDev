@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 		if (userRepository.findByEmail(user.getEmail()) != null)
 			throw new UserServiceException("email is duplicate entry");
 		
-		final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";
+		final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null) throw new UserServiceException("user not found");
 		if (userEntity.getIsActive() == false) throw new UserServiceException("user is not active");
 		
-		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+		final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
 		if (userEntity == null) throw new UserServiceException("user not found");
 		if (userEntity.getIsActive() == false) throw new UserServiceException("user is not active");
 		
-		final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+		final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -265,7 +265,7 @@ public class UserServiceImpl implements UserService {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 		
-		final String DATE_FORMAT = "dd.MM.yyyy";
+		final String DATE_FORMAT = "yyyy-MM-dd";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -273,7 +273,7 @@ public class UserServiceImpl implements UserService {
 		 
 		String timeStr = formatter.format(currentTime.getTime());
 		
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date d1 = null;
 		Date d2 = null;
@@ -331,7 +331,7 @@ public class UserServiceImpl implements UserService {
 		
 		Pageable pageableRequest = PageRequest.of(page, limit);
 		
-		Page<ProductsEntity> productsPage = productsRepository.findAll(pageableRequest);
+		Page<ProductsEntity> productsPage = productsRepository.findAllByOrderByCreatedDateDesc(pageableRequest);
 		
 		List<ProductsEntity> products = productsPage.getContent();
 		
@@ -375,4 +375,5 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 
+	
 }

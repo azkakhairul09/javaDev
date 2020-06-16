@@ -70,6 +70,17 @@ public class InvoiceEntity implements Serializable{
 	
 	@Column
 	private Boolean isExpired;
+	
+	@Column
+	private String transactionId;
+	
+	@Column
+	private String solvedDate;
+	
+	@Column
+	private Boolean isVerified;
+	
+	
 
 	public long getId() {
 		return id;
@@ -189,5 +200,29 @@ public class InvoiceEntity implements Serializable{
 
 	public void setIsExpired(Boolean isExpired) {
 		this.isExpired = isExpired;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getSolvedDate() {
+		return solvedDate;
+	}
+
+	public void setSolvedDate(String solvedDate) {
+		this.solvedDate = solvedDate;
+	}
+
+	public Boolean getIsVerified() {
+		return isVerified;
+	}
+
+	public void setIsVerified(Boolean isVerified) {
+		this.isVerified = isVerified;
 	}	
 }

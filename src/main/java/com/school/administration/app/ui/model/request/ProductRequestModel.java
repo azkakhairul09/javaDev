@@ -5,6 +5,7 @@ public class ProductRequestModel {
 	private String price;
 	private String quantity;
 	private String expiredDate;
+	private String description;
 	public String getProductName() {
 		return productName;
 	}
@@ -28,5 +29,11 @@ public class ProductRequestModel {
 	}
 	public void setExpiredDate(String expiredDate) {
 		this.expiredDate = expiredDate;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

@@ -31,9 +31,6 @@ public class TransactionEntity implements Serializable {
 	private String invoiceId;
 	
 	@Column(nullable = false)
-	private String productId;
-	
-	@Column(nullable = false)
 	private String userId;
 	
 	@Column(nullable = false)
@@ -49,7 +46,7 @@ public class TransactionEntity implements Serializable {
 	private String status;
 	
 	@Column
-	private String userChecking;
+	private String adminChecking;
 	
 	@Column
 	private Boolean trxVerified;
@@ -76,14 +73,6 @@ public class TransactionEntity implements Serializable {
 
 	public void setInvoiceId(String invoiceId) {
 		this.invoiceId = invoiceId;
-	}
-
-	public String getProductId() {
-		return productId;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
 	}
 
 	public String getUserId() {
@@ -126,12 +115,12 @@ public class TransactionEntity implements Serializable {
 		this.status = status;
 	}
 
-	public String getUserChecking() {
-		return userChecking;
+	public String getAdminChecking() {
+		return adminChecking;
 	}
 
-	public void setUserChecking(String userChecking) {
-		this.userChecking = userChecking;
+	public void setAdminChecking(String adminChecking) {
+		this.adminChecking = adminChecking;
 	}
 
 	public Boolean getTrxVerified() {

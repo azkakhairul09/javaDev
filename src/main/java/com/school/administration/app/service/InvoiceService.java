@@ -10,4 +10,5 @@ public interface InvoiceService extends UserDetailsService {
 	InvoiceDto createInvoice(String AudienceId, String ProductId, InvoiceDto invoice);
 	List<InvoiceDto> getInvoices(int page, int limit);
 	InvoiceDto getInvoiceByInvoiceId(String invoiceId);
+	InvoiceDto getContentByInvoiceId(String invoiceId);
 }

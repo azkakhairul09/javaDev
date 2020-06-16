@@ -74,6 +74,9 @@ public class UserEntity implements Serializable{
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="address_id")
 	private AddressEntity address;
+	
+	private String token;
+	private String loginTime;
 
 	public long getId() {
 		return id;
@@ -209,5 +212,21 @@ public class UserEntity implements Serializable{
 
 	public void setAddress(AddressEntity address) {
 		this.address = address;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(String loginTime) {
+		this.loginTime = loginTime;
 	}
 }

@@ -13,6 +13,7 @@ public class ProductsDto implements Serializable {
 	private String productName;
 	private String price;
 	private String quantity;
+	private String description;
 	private String expiredDate;
 	private String createdBy;
 	private String createdDate;
@@ -91,5 +92,11 @@ public class ProductsDto implements Serializable {
 	}
 	public void setInvoice(Set<InvoiceDto> invoice) {
 		this.invoice = invoice;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

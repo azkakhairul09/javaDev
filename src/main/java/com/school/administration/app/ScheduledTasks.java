@@ -36,7 +36,7 @@ public class ScheduledTasks {
 	public ProductsDto updateExpiredProduct() {
     	ProductsDto returnValue = new ProductsDto();
     	
-    	final String DATE_FORMAT = "dd.MM.yyyy";
+    	final String DATE_FORMAT = "yyyy-MM-dd";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -52,6 +52,17 @@ public class ScheduledTasks {
 			if (product.getIsExpired() == false) 
 			{
 				product.setIsExpired(true);
+				
+				final String Date_Format = "yyyy-MM-dd HH:mm:ss";
+				SimpleDateFormat date_formatter = new SimpleDateFormat(Date_Format);
+				date_formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+				 
+				Calendar current_time = Calendar.getInstance();
+				 
+				String modifiedDate = date_formatter.format(current_time.getTime());
+				product.setModifiedDate(modifiedDate);
+				product.setModifiedBy("System");
+				
 				ProductsEntity updateProduct = productRepository.save(product);
 				
 				BeanUtils.copyProperties(updateProduct, returnValue);
@@ -67,7 +78,7 @@ public class ScheduledTasks {
 	public InvoiceDto checkExpiredInvoice() {
     	InvoiceDto returnValue = new InvoiceDto();
     	
-    	final String DATE_FORMAT = "dd.MM.yyyy";
+    	final String DATE_FORMAT = "yyyy-MM-dd";
 		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		 
@@ -83,6 +94,17 @@ public class ScheduledTasks {
 			if (invoice.getIsExpired() == false) 
 			{
 				invoice.setIsExpired(true);
+				
+				final String Date_Format = "yyyy-MM-dd HH:mm:ss";
+				SimpleDateFormat date_formatter = new SimpleDateFormat(Date_Format);
+				date_formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+				 
+				Calendar current_time = Calendar.getInstance();
+				 
+				String modifiedDate = date_formatter.format(current_time.getTime());
+				invoice.setModifiedDate(modifiedDate);
+				invoice.setModifiedBy("System");
+				
 				InvoiceEntity updateInvoice = invoiceRepository.save(invoice);
 				
 				BeanUtils.copyProperties(updateInvoice, returnValue);
@@ -102,7 +124,7 @@ public class ScheduledTasks {
     	Calendar calendar = Calendar.getInstance();
     	calendar.add(Calendar.HOUR_OF_DAY, -1);
     	Date date = calendar.getTime();
-    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    	SimpleDateFormat sdfStopTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String newStopTime = sdfStopTime.format(date);
     	
 		List<InvoiceEntity> invoiceEntity = new ArrayList<InvoiceEntity>();
@@ -113,6 +135,16 @@ public class ScheduledTasks {
 			if (invoice.getIsPayment() == false && invoice.getIsExpired() == false) 
 			{
 				invoice.setIsExpired(true);
+				
+				final String Date_Format = "yyyy-MM-dd HH:mm:ss";
+				SimpleDateFormat date_formatter = new SimpleDateFormat(Date_Format);
+				date_formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+				 
+				Calendar current_time = Calendar.getInstance();
+				 
+				String modifiedDate = date_formatter.format(current_time.getTime());
+				invoice.setModifiedDate(modifiedDate);
+				invoice.setModifiedBy("System");
 				
 				InvoiceEntity updateInvoice = invoiceRepository.save(invoice);
 				

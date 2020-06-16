@@ -13,17 +13,17 @@ public class RoleResponse {
 	}
 
 	public String getRoleName() {
-		if (getRoleId().equals("1")) 
-		{
-			roleName = "Administrator";
-			return roleName;
-		}
-		else if (getRoleId().equals("2")) 
-		{
-			roleName = "Member";
-			return roleName;
-		}
-		
+//		if (getRoleId().equals("1")) 
+//		{
+//			roleName = "Administrator";
+//			return roleName;
+//		}
+//		else if (getRoleId().equals("2")) 
+//		{
+//			roleName = "Member";
+//			return roleName;
+//		}
+//		
 		return roleName;
 	}
 

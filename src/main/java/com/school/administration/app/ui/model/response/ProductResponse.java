@@ -6,7 +6,9 @@ public class ProductResponse {
 	private String price;
 	private String quantity;
 	private String expiredDate;
+	private String description;
 	private Boolean isExpired;
+	private String createdBy;
 	
 	public String getProductId() {
 		return productId;
@@ -43,5 +45,17 @@ public class ProductResponse {
 	}
 	public void setIsExpired(Boolean isExpired) {
 		this.isExpired = isExpired;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 }

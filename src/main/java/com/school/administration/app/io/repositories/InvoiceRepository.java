@@ -12,5 +12,5 @@ public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Long> {
 
 	List<InvoiceEntity> findInvoiceByCreatedDate(String newStopTime);
 	InvoiceEntity findInvoiceByInvoiceId(String invoiceId);
-	
+	InvoiceEntity findContentByInvoiceId(String invoiceId);
 }
