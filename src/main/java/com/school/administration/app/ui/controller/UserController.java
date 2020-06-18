@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,6 +56,7 @@ import com.school.administration.app.ui.model.response.UserResponse;
 import com.school.administration.app.ui.model.response.ProductResponse;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000/", "https://sangbango-project.web.app/"})
 public class UserController {
 
 	@Autowired
