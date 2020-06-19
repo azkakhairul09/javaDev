@@ -1,20 +1,15 @@
 package com.school.administration.app;
 
-import java.util.Collections;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.school.administration.app.SchoolAdministrationApplication;
 import com.school.administration.app.SpringApplicationContext;
@@ -64,4 +59,12 @@ public class SchoolAdministrationApplication extends SpringBootServletInitialize
 //        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);  
 //        return bean;  
 //    }
+}
+
+@RestController
+class HelloController {
+	@GetMapping("/")
+	String hello() {
+		return "Hello World";
+	}
 }
